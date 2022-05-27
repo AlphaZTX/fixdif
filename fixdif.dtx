@@ -1,0 +1,579 @@
+% \iffalse meta-comment
+%
+% Copyright (C) 2022 by Zhang Tingxuan <alphaztx@163.com>
+%
+% This work may be distributed and/or modified under the
+% conditions of the LaTeX Project Public License, either
+% version 1.3c of this license or (at your option) any later
+% version. The latest version of this license is in:
+%
+%   http://www.latex-project.org/lppl.txt
+%
+% and version 1.3 or later is part of all distributions of
+% LaTeX version 2005/12/01 or later.
+%
+% This work has the LPPL maintenance status `maintained'.
+%
+% The Current Maintainer of this work is Zhang Tingxuan.
+%
+% This work consists of the files fixdif.dtx,
+%           and the derived files fixdif.ins,
+%                                 fixdif.sty,
+%                                 fixdef.pdf,
+%                             and README.md.
+%
+%<*internal>
+\iffalse
+%</internal>
+%
+%<*readme>
+# The `fixdif` Package
+
+The `fixdif` package provides an interface for defining the style of differential operators.
+
+The basic commands are:
+
+- `\d`: for differential operator "d" in math mode and under-dot accent in text;
+- `\partial`: a "fixed" partial differential operator command;
+- `\letdif`: an interface for defining new commands for differential operators.
+
+See `fixdif.pdf` for more. Happy TeXing!
+
+## License
+
+This work may be distributed and/or modified under the conditions of the [LaTeX Project Public License](http://www.latex-project.org/lppl.txt), either version 1.3c of this license or (at your option) any later version.
+
+------
+
+Copyright (C) 2022 by Zhang Tingxuan <alphaztx@163.com>.
+%</readme>
+%
+%<*internal>
+\fi
+\begingroup
+  \def\NameOfLaTeXe{LaTeX2e}
+\expandafter\endgroup\ifx\NameOfLaTeXe\fmtname\else
+\csname fi\endcsname
+%</internal>
+%
+%<*install>
+\input docstrip.tex
+\keepsilent
+
+\preamble
+
+  Copyright (C) 2022 by Zhang Tingxuan <alphaztx@163.com>
+
+  This work may be distributed and/or modified under the
+  conditions of the LaTeX Project Public License, either
+  version 1.3c of this license or (at your option) any later
+  version. The latest version of this license is in:
+
+    http://www.latex-project.org/lppl.txt
+
+  and version 1.3 or later is part of all distributions of
+  LaTeX version 2005/12/01 or later.
+ 
+  This work has the LPPL maintenance status `maintained'.
+ 
+  The Current Maintainer of this work is Zhang Tingxuan.
+
+  This work consists of the files fixdif.dtx,
+            and the derived files fixdif.ins,
+                                  fixdif.sty,
+                                  fixdef.pdf,
+                              and README.md.
+
+\endpreamble
+
+\generate{
+  \usedir{tex/latex/fixdif}
+    \file{\jobname.sty}      {\from{\jobname.dtx}{package}}
+%</install>
+%<*internal>
+  \usedir{source/latex/fixdif}
+    \file{\jobname.ins}      {\from{\jobname.dtx}{install}}
+%</internal>
+%<*install>
+  \usedir{doc/latex/fixdif}
+  \nopreamble\nopostamble
+    \file{README.md}         {\from{\jobname.dtx}{readme}}
+}
+
+\obeyspaces
+\Msg{****************************************************}
+\Msg{*                                                  *}
+\Msg{* To finish the installation you have to move the  *}
+\Msg{* following file into a directory searched by TeX: *}
+\Msg{*                                                  *}
+\Msg{*     fixdif.sty                                   *}
+\Msg{*                                                  *}
+\Msg{* The recommended directory is                     *}
+\Msg{*   TDS:tex/latex/fixdif                           *}
+\Msg{*                                                  *}
+\Msg{* To produce the documentation run the file        *}
+\Msg{* fixdif.dtx through pdfLaTeX/XeLaTeX/LuaLaTeX.    *}
+\Msg{*                                                  *}
+\Msg{* Happy TeXing!                                    *}
+\Msg{*                                                  *}
+\Msg{****************************************************}
+
+\endbatchfile
+%</install>
+%
+%<*internal>
+\fi
+%</internal>
+%
+%<*driver>
+\ProvidesFile{fixdif.dtx}[2022/05/27 (c) Copyright 2022 by Zhang Tingxuan]
+\documentclass{ltxdoc}
+
+\usepackage{xcolor}
+\definecolor{titlecolor}{RGB}{0,12,160}
+\usepackage{doc}
+\usepackage{fancyvrb}
+\fvset{xleftmargin=2em,fontsize=\small,gobble=2}
+\MakeShortVerb|
+
+\usepackage{hologo}
+\def\XeTeX{\hologo{XeLaTeX}}
+\def\LuaTeX{\hologo{LuaTeX}}
+
+\def\pkg{\textsf}
+\def\opt{\texttt}
+
+\title{The \pkg{fixdif} Package}
+\author{Zhang Tingxuan}
+\date{2022/05/27\quad Version 1.0\thanks{\url{https://github.com/AlphaZTX}}}
+
+\usepackage{hyperref}
+\hypersetup{
+  pdftitle   = {The fixdif Package},
+  pdfauthor  = {Zhang Tingxuan},
+  pdfcreator = {pdfLaTeX/XeLaTeX/LuaLaTeX},
+  hidelinks,
+}
+\def\pkg{\textsf}
+
+\makeatletter
+\renewcommand\section{\@startsection {section}{1}{\z@}%
+  {-2.5ex plus -1ex minus -.2ex}%
+  {1ex plus .2ex}%
+  {\normalfont\Large\bfseries\color{titlecolor}}}
+\renewcommand\subsection{\@startsection{subsubsection}{3}{\z@}%
+  {-2ex plus -1ex minus -.2ex}%
+  {.5ex plus .2ex}%
+  {\normalfont\normalsize\bfseries\color{titlecolor}}}
+\renewcommand\paragraph{\@startsection{paragraph}{4}{\z@}%
+  {.8ex plus .4ex minus .2ex}%
+  {-1em}%
+  {\normalfont\normalsize\bfseries\color{titlecolor}}}
+\def\UrlAlphabet{%
+      \do\a\do\b\do\c\do\d\do\e\do\f\do\g\do\h\do\i\do\j%
+      \do\k\do\l\do\m\do\n\do\o\do\p\do\q\do\r\do\s\do\t%
+      \do\u\do\v\do\w\do\x\do\y\do\z\do\A\do\B\do\C\do\D%
+      \do\E\do\F\do\G\do\H\do\I\do\J\do\K\do\L\do\M\do\N%
+      \do\O\do\P\do\Q\do\R\do\S\do\T\do\U\do\V\do\W\do\X%
+      \do\Y\do\Z}
+\def\UrlDigits{\do\1\do\2\do\3\do\4\do\5\do\6\do\7\do\8\do\9\do\0}
+\g@addto@macro{\UrlBreaks}{\UrlOrds}
+\g@addto@macro{\UrlBreaks}{\UrlAlphabet}
+\g@addto@macro{\UrlBreaks}{\UrlDigits}
+\ifdefined\Umathcode
+  \usepackage{unicode-math}
+  \setmathfont{Latin Modern Math}
+\fi
+\makeatother
+
+\usepackage{fixdif}
+
+
+\linespread{1.05}
+\parskip5pt plus 2pt minus 1pt
+\parindent3em
+
+\begin{document}
+  \DocInput{\jobname.dtx}
+\end{document}
+%</driver>
+% \fi
+% 
+% \maketitle
+% 
+% \begin{abstract}
+% The \pkg{fixdif} package redefines the \cs{d} command in \LaTeX{} 
+% and provides an interface to define commands as differential operators.
+%
+% The package is compatible with pdf\TeX, \XeTeX{} and \LuaTeX. 
+% Furthermore, the package is compatible with \pkg{unicode-math} package 
+% in \XeTeX{} and \LuaTeX.
+% \end{abstract}
+%
+% \tableofcontents
+%
+% \section{The background}
+% It's usually recommended that one should reserve a small skip between 
+% the differential operator and the expression before it\footnote{See 
+% \url{https://tex.stackexchange.com/questions/14821/whats-the-proper-way-to-typeset-a-differential-operator}.}. 
+% Take the following cases as an example:
+% \[f(x)\mathrm{d}x\qquad\mbox{and}\qquad f(x)\d x.\]
+% We usually consider that the example on the right side is better than the 
+% one on the left side. The little skip between $f(x)$ and $\d x$ can be 
+% regarded as a symbol of the product of $f(x)$ and $\d x$. 
+%
+% So some users prefer to define a macro like this:
+% \begin{Verbatim}
+% \renewcommand\d{\mathop{\mathrm{d}}\!}
+% \end{Verbatim}
+% This macro works well in ``display math'' and ``text math'', but we still 
+% face three problems:
+% \begin{enumerate}
+% \item The skip before ``d'' would still be reserved in ``text fraction'', 
+% which is regarded bad. For example, |$\d y/\d x$| produces 
+% $\mathrm{d}y/\,\mathrm{d}x$;
+%
+% \item This |\d| command cannot be used out of math mode. In another word, 
+% |\d{o}| would not produce ``\d{o}'' in text;
+%
+% \item The skip between ``d'' and the expression before it can be regarded 
+% as a product operator. A product operator is definitely a binary operator. 
+%
+% Take |\cdot| ($\cdot$) as an example.
+% A binary operator reserves small skips before and after itself when in 
+% ``display math'' or ``text math'' such as $x\cdot y$, but the skips will 
+% disappear in ``script math'' or ``script script math'' such as $a^{x\cdot y}$. 
+% Thus the small skip should also disappear in script, but |$a^{f(x)\d x}$| 
+% still produces $a^{f(x)\,\mathrm{d}x}$ but not $a^{f(x)\d x}$.
+% \end{enumerate}
+% To solve these problems, you can try this package.
+%
+% \section{Introduction}
+% To load this package, write
+% \begin{Verbatim}
+% \usepackage{fixdif}
+% \end{Verbatim}
+% in the preamble. In your document, 
+% \begin{Verbatim}
+% \[ f(x)\d x,\quad\frac{\d y}{\d x},\quad\d y/\d x,\quad a^{y\d x}. \]
+% \end{Verbatim}
+% will produce
+% \[f(x)\d x,\quad \frac{\d y}{\d x},\quad \d y/\d x,\quad a^{y\d x}.\]
+%
+% \subsection{When using \pkg{unicode-math}}
+% If you are using \pkg{unicode-math} package with \XeTeX/\LuaTeX{} 
+% in your document, you must pay attention to the following items:
+% \begin{itemize}
+% \item If you want to \pkg{amsmath} package, make sure that the 
+% \pkg{unicode-math} package is loaded \emph{after} \pkg{amsmath}. 
+%
+% \item You had better specify the math font through the \cs{setmathfont} 
+% provided by \pkg{unicode-math} in order to avoid bad skip in text fraction 
+% like $\d y/\d x$.
+%
+% \item Load the \pkg{fixdif} package \emph{after} \pkg{unicode-math}.
+% \end{itemize}
+% Therefore the correct order is
+% \begin{Verbatim}
+% \usepackage{amsmath}
+% \usepackage{unicode-math}
+% \setmathfont{...}[...]
+% \usepackage{fixdif}
+% \end{Verbatim}
+%
+% \subsection{When using \pkg{hyperref}}
+% If you want to use the \pkg{hyperref} package simultaneously, 
+% remember to load \pkg{hyperref} \emph{before} the \pkg{fixdif} package, 
+% otherwise the \pkg{hyperref} package will cause conflicts.
+%
+% \subsection{Basic commands and package options}
+% \DescribeMacro{\d}
+% The \pkg{fixdif} package provides a \cs{d} command for the differential 
+% operator ``d'' in math mode. When in the text, \cs{d} behaves 
+% just like the old \cs{d} command in \LaTeX{} or plain \TeX{} as an 
+% accent command. For example, 
+% \begin{Verbatim}
+% $\d x$ and \d x
+% \end{Verbatim}
+% will produce ``$\d x$ and \d x''.
+%
+% \paragraph{Set the font of \cs{d}}
+% There are two basic package options to control the \cs{d}'s style in math 
+% mode~--- \opt{rm} and \opt{normal}. The default option is \opt{rm}, in whose 
+% case |$f(x)\d x$| produces $f(x)\d x$. If you chose the \opt{normal} option, 
+% for example
+% \begin{Verbatim}
+% \usepackage[normal]{fixdif}
+% \end{Verbatim}
+% |$f(x)\d x$| would produces $f(x)\,dx$.
+%
+% \DescribeMacro{\resetdfont}
+% Besides the previous two optional fonts, you can reset the font of 
+% differential operator ``d'' through \cs{resetdfont} command:
+% \begin{Verbatim}
+% \resetdfont{\mathsf}
+% \end{Verbatim}
+% then |\d x| will produce $\mathsf{d}x$.
+%
+% \paragraph{Control the behavior of \cs{partial}}
+% \DescribeMacro{\partial}
+% In default, \cs{partial} will also be regarded as a differential operator 
+% in this package. If you don't like this default setting, you can use the 
+% \opt{nopartial} option:
+% \begin{Verbatim}
+% \usepackage[nopartial]{fixdif}
+% \end{Verbatim}
+%
+% \section{Define commands for differential operators}
+% \noindent\emph{Attention! The commands in this section 
+% can be used in preamble only!}
+%
+% \subsection{Define commands with a single command name}
+% \noindent\textbf{\cs{letdif}\marg{cmd}\marg{csname}}\DescribeMacro{\letdif}
+% \hfill(preamble only)
+%
+% The \cs{letdif} command has two arguments~--- the first is the newly-defined 
+% command and the second is the \emph{name} of a \emph{single} character 
+% command (without the backslash on the front). For example,
+% \begin{Verbatim}
+% \letdif{\vr}{delta}
+% \end{Verbatim}
+% then the |\vr| will produce a $\delta$ (|\delta|) with automatic skip 
+% before it.
+%
+% Through the \cs{letdif} command, we can redefine a math character command 
+% by its name. For example, 
+% \begin{Verbatim}
+% \letdif{\delta}{delta}
+% \end{Verbatim}
+% then |\delta| itself will be a differential operator.
+%
+% The second argument \meta{csname} of \cs{letdif} command can be used 
+% repeatedly.
+%
+% \noindent\textbf{\cs{letdif*}\marg{cmd}\marg{csname}}\DescribeMacro{\letdif*}
+% \hfill(preamble only)
+%
+% This command is basically the same as \cs{letdif}, but this command will 
+% patch a correction after the differential operator. This is very useful 
+% when a math font is setted through \pkg{unicode-math} package. For example, 
+% \begin{Verbatim}
+% \usepackage{unicode-math}
+% \setmathfont{TeX Gyre Termes Math}
+% \usepackage{fixdif}
+% \letdif{\vr}{updelta}
+% \end{Verbatim}
+% this will cause bad negative skip after |\vr|, but if you change the last 
+% line into
+% \begin{Verbatim}
+% \letdif*{\vr}{updelta}
+% \end{Verbatim}
+% you will get the result correct.
+%
+% \subsection{Define commands with multi commands or a string}
+%
+% \noindent\textbf{\cs{newdif}\marg{cmd}\marg{multi-cmd}}\DescribeMacro{\newdif}
+% \hfill(without correction, preamble only)\\
+% \noindent\textbf{\cs{newdif*}\marg{cmd}\marg{multi-cmd}}\DescribeMacro{\newdif*}
+% \hfill(with correction, preamble only)
+%
+% The first argument of these commands is the newly-defined command; and the 
+% second argument should contain \emph{more than one commands} or 
+% \emph{a string}. For example, if you have loaded the \pkg{xcolor} package, 
+% you can use the following line:
+% \begin{Verbatim}
+% \newdif{\redsfd}{\textsf{\color{red}d}}
+% \end{Verbatim}
+% Then you get the |\redsfd| as a differential operator. Take another example,
+% \begin{Verbatim}
+% \newdif{\D}{\mathrm{D}}
+% \end{Verbatim}
+% Then you get |\D| for an uppercase upright ``D'' as a differential operator.
+%
+% If your second argument contains only one command like |\Delta|, 
+% you should use \cs{letdif} or \cs{letdif*} instead.
+%
+% These two commands will check whether \meta{cmd} has been defined already. 
+% If so, an error message will be given.
+%
+% \noindent\textbf{\cs{renewdif}\marg{cmd}\marg{multi-cmd}}\DescribeMacro{\newdif}
+% \hfill(without correction, preamble only)\\
+% \noindent\textbf{\cs{renewdif*}\marg{cmd}\marg{multi-cmd}}\DescribeMacro{\newdif*}
+% \hfill(with correction, preamble only)
+%
+% These two commands are basically the same as \cs{newdif} and \cs{newdif*}. 
+% The only difference is that \cs{renewdif} and \cs{renewdif*} will check 
+% whether \meta{cmd} has \emph{not} been defined yet. If so, an error message 
+% will be given.
+%
+% \section{The source code}
+%    \begin{macrocode}
+%<*package>
+%    \end{macrocode}
+% Check the \TeX{} format and provides the package name.
+%    \begin{macrocode}
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{fixdif}[2022/05/26 Interface for defining the differential operator.]
+%    \end{macrocode}
+% 
+% \subsection{Control the skip between slash and differential operator}
+% Change the math code of slash ($/$) and backslash ($\backslash$) so that the skip 
+% between slashes and differential operators can be ignored.
+%    \begin{macrocode}
+\@ifpackageloaded{unicode-math}{
+%    \end{macrocode}
+% If the \pkg{unicode-math} package has been loaded, use the \XeTeX/\LuaTeX{} primitive 
+% \cs{Umathcode} to change the type of slashes. The numeral ``4'' stands for ``open''.
+%    \begin{macrocode}
+  \Umathcode`\/="4 "0 "002F
+  \Umathcode"2044="4 "0 "2044
+  \Umathcode"2215="4 "0 "2215
+  \Umathcode"2F98="4 "0 "2F98
+  \Umathcode`\\="4 "0 "005C
+  \Umathcode"2216="4 "0 "2216
+  \Umathcode"29F5="4 "0 "29F5
+  \Umathcode"29F9="4 "0 "29F9
+}{
+%    \end{macrocode}
+% If the \pkg{unicode-math} package has not been loaded, use the \TeX{} primitive 
+% \cs{mathcode} to change the type of slashes. The \cs{backslash} needs to be redefined 
+% through \cs{delimiter} primitive too.
+%    \begin{macrocode}
+  \mathcode`\/="413D
+  \mathcode`\\="426E % \backslash
+  \def\backslash{\delimiter"426E30F\relax}
+}
+%    \end{macrocode}
+% 
+% \subsection{Patch the skips around the differential operator}
+% \DescribeMacro{\mup@tch}
+% The following \cs{mup@tch} patches the skip after the differential operator.
+%    \begin{macrocode}
+\def\mup@tch{\mathchoice{\mskip-\thinmuskip}{\mskip-\thinmuskip}{}{}}
+%    \end{macrocode}
+% The \cs{s@beforep@tch} patches the commands with star (\cs{letdif*}, etc).
+%    \begin{macrocode}
+\def\s@beforep@tch{\mathchoice{}{}{\mbox{}}{\mbox{}}}
+%    \end{macrocode}
+% 
+% \subsection{Declare the package options}
+% Declare the options of the package and execute them.
+%    \begin{macrocode}
+\DeclareOption{rm}{\@ifpackageloaded{unicode-math}
+  {\def\@@dif{\symrm{d}}}{\def\@@dif{\mathrm{d}}}}
+\DeclareOption{normal}{\def\@@dif{d}}
+\DeclareOption{partial}{\def\fixdif@partial@bool{1}}
+\DeclareOption{nopartial}{\def\fixdif@partial@bool{0}}
+\ExecuteOptions{rm,partial}
+\ProcessOptions\relax
+%    \end{macrocode}
+% Control the behavior of \cs{partial}.
+%    \begin{macrocode}
+\def\fixdif@partial@true{1}
+\ifx\fixdif@partial@bool\fixdif@partial@true
+  \AtEndOfPackage{\letdif{\partial}{partial}}
+\fi
+%    \end{macrocode}
+% \DescribeMacro{\resetdfont}
+% Define the \cs{resetdfont} command.
+%    \begin{macrocode}
+\gdef\resetdfont#1{\let\@@dif\relax%
+  \def\@@dif{#1{d}}}
+%    \end{macrocode}
+% 
+% \subsection{Deal with the \cs{d} command}
+% \DescribeMacro{\@dif}
+% \cs{@dif} is the differential operator produced by \cs{d} in math mode. 
+% Here we prefer \cs{mathinner} to |\mathbin| to make the skip.
+%    \begin{macrocode}
+\def\@dif{\ifmmode%
+  \mathinner{\@@dif}\mup@tch%
+\fi}
+%    \end{macrocode}
+% \DescribeMacro{\d@accent}
+% Restore the \cs{d} command in text by \cs{d@accent} with the \cs{let} 
+% primitive.
+%    \begin{macrocode}
+\let\d@accent\d
+%    \end{macrocode}
+% \DescribeMacro{\d}
+% Redefine the \cs{d} command. In text, we need to expand the stuffs after \cs{d}
+%    \begin{macrocode}
+\gdef\d{\ifmmode\@dif\else\expandafter\d@accent\fi}
+%    \end{macrocode}
+% 
+% \subsection{User's interface for defining new differential operators}
+% \DescribeMacro{\letdif}\DescribeMacro{\letdif*}
+% Define the \cs{letdif} and \cs{letdif*} command. The internal version of \cs{letdif} 
+% is \cs{@letdif}, of \cs{letdif*} is \cs{s@letdif}.
+%    \begin{macrocode}
+\def\@letdif#1#2{\AtBeginDocument{
+%    \end{macrocode}
+% |#1| is the final command; |#2| is the ``control sequence name'' of |#1|'s initial definition.
+% Here we create a command (\cs{csname}|#2@old|\cs{endcsname}) to restore |#2|.
+%    \begin{macrocode}
+  \ifcsname #2@old\endcsname\else
+  \expandafter\let\csname #2@old\expandafter\endcsname%
+    \csname #2\endcsname
+  \fi
+%    \end{macrocode}
+% Finally let |#1| be the new command.
+%    \begin{macrocode}
+  \gdef#1{\mathinner{\csname #2@old\endcsname}\mup@tch}
+}}
+%    \end{macrocode}
+% The definition of \cs{s@letdif} is similar, but with the patch for negative skips.
+%    \begin{macrocode}
+\def\s@letdif#1#2{\AtBeginDocument{
+  \ifcsname #2@old\endcsname\else
+  \expandafter\let\csname #2@old\expandafter\endcsname%
+    \csname #2\endcsname
+  \fi
+  \gdef#1{\mathinner{\s@beforep@tch\csname #2@old\endcsname\mbox{}}\mup@tch}
+}}
+\def\letdif{\@ifstar\s@letdif\@letdif}
+%    \end{macrocode}
+% \DescribeMacro{\newdif}\DescribeMacro{\newdif*}
+% Define the \cs{newdif} and \cs{newdif*} commands. |#1| is the final command; |#2| is the ``long'' argument.
+%    \begin{macrocode}
+\long\def\@newdif#1#2{\AtBeginDocument{
+  \ifdefined#1
+    \PackageError{fixdif}{\string#1 is already defined.}
+      {Try another command instead of \string#1.}
+  \else
+    \long\gdef#1{\mathinner{#2}\mup@tch}
+  \fi
+}}
+\long\def\s@newdif#1#2{\AtBeginDocument{
+  \ifdefined#1
+  \PackageError{fixdif}{\string#1 is already defined.}
+    {Try another command instead of \string#1.}
+  \else
+    \long\gdef#1{\s@beforep@tch\mathinner{#2\mbox{}}\mup@tch}
+  \fi
+}}
+\def\newdif{\@ifstar\s@newdif\@newdif}
+%    \end{macrocode}
+% \DescribeMacro{\renewdif}\DescribeMacro{\renewdif*}
+% Define the \cs{renewdif} and \cs{renewdif*} commands.
+%    \begin{macrocode}
+\long\def\@renewdif#1#2{\AtBeginDocument{
+  \ifdefined#1
+    \long\gdef#1{\mathinner{#2}\mup@tch}
+  \else
+    \PackageError{fixdif}{\string#1 has not been defined yet.}
+      {You should use \string\newdif instead of \string\renewdif.}
+  \fi
+}}
+\long\def\s@renewdif#1#2{\AtBeginDocument{
+  \ifdefined#1
+    \long\gdef#1{\s@beforep@tch\mathinner{#2\mbox{}}\mup@tch}
+  \else
+    \PackageError{fixdif}{\string#1 has not been defined yet.}
+      {You should use \string\newdif instead of \string\renewdif.}
+  \fi
+}}
+\def\renewdif{\@ifstar\s@renewdif\@renewdif}
+%</package>
+%    \end{macrocode}
+\endinput
