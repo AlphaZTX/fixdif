@@ -14,6 +14,12 @@ See `fixdif.pdf` for more. Happy TeXing!
 
 This work may be distributed and/or modified under the conditions of the [LaTeX Project Public License](http://www.latex-project.org/lppl.txt), either version 1.3c of this license or (at your option) any later version.
 
+## Releases
+
+See the “Releases” on the right for the latest version.
+
+You can also download the latest version on [CTAN](https://www.ctan.org/pkg/fixdif).
+
 ------
 
 Copyright (C) 2022 by Zhang Tingxuan <alphaztx@163.com>.
