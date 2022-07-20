@@ -13,9 +13,8 @@
 
 ## 许可证
 
-This work may be distributed and/or modified under the conditions of
-the [LaTeX Project Public License](http://www.latex-project.org/lppl.txt),
-either version 1.3c of this license or (at your option) any later version.
+本作品可以在 [LaTeX Project Public License](http://www.latex-project.org/lppl.txt)
+的条件下分发和/或修改，可以是本许可证的1.3c版本，也可以是（根据您的选择）任何更高版本。
 
 ------
 
