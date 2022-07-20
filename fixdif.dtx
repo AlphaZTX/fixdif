@@ -341,7 +341,7 @@ Copyright (C) 2022 by Zhang Tingxuan <alphaztx@163.com>.
 % \begin{Verbatim}
 % \renewcommand\d{\mathop{\mathrm{d}}\!}
 % \end{Verbatim}
-% This macro works well in ``display math'' and ``text math'', but we still 
+% This macro works well in  “行间公式” and “行内公式”, but we still 
 % face the following three problems:
 % \begin{enumerate}
 % \item The skip before ``d'' would still be reserved in ``text fraction'', 
@@ -356,7 +356,7 @@ Copyright (C) 2022 by Zhang Tingxuan <alphaztx@163.com>.
 %
 % Take |\cdot| ($\cdot$) as an example.
 % A binary operator reserves small skips before and after itself when in 
-% ``display math'' or ``text math'' such as $x\cdot y$, but the skips will 
+%  “行间公式” or “行内公式” such as $x\cdot y$, but the skips will 
 % disappear in ``script math'' or ``script script math'' such as $a^{x\cdot y}$. 
 % Thus the small skip should also disappear in script, but |$a^{f(x)\d x}$| 
 % still produces $a^{f(x)\,\mathrm{d}x}$ but not $a^{f(x)\d x}$.
@@ -582,74 +582,67 @@ Copyright (C) 2022 by Zhang Tingxuan <alphaztx@163.com>.
 % \pkg{fixDif} 宏包在 \LaTeX{} 中重定义了\cs{d}命令，
 % 并提供来定义微分算子命令的接口。
 %
-% 本宏包兼容 pdf\TeX, \XeTeX{}, \LuaTeX。
-% 此外，还兼容 \XeTeX{} and \LuaTeX 下的 \pkg{unicode-math} 宏包。
+% 本宏包不仅可用 pdf\TeX, \XeTeX{}, \LuaTeX 编译，
+% 还兼容 \XeTeX{} and \LuaTeX 下的 \pkg{unicode-math} 宏包。
 % \end{abstract}
 %
 % \tableofcontents
 %
 % \section{背景}
-% It's usually recommended that one should reserve a small skip between 
-% the differential operator and the expression before it\footnote{See 
+% 为求美观，我们通常会在微分算子和它前面的表达式之间保留一定的空白\footnote{See 
 % \url{https://tex.stackexchange.com/questions/14821/whats-the-proper-way-to-typeset-a-differential-operator}.}. 
-% Take the following cases as an example:
+% 比如以下情况：
 % \[f(x)\mathrm{d}x\qquad\mbox{and}\qquad f(x)\d x.\]
-% We usually consider that the example on the right side is better than the 
-% one on the left side. The little skip between $f(x)$ and $\d x$ can be 
-% regarded as a symbol of the product of $f(x)$ and $\d x$. 
+% 我们通常会认为左边比右边好看，在 $f(x)$ 和 $\d x$ 之间的小空白可以
+% 视为$f(x)$和$\d x$的乘积符号。
 %
-% So some users prefer to define a macro like this:
+% 因此，有些用户会喜欢定义这样的命令:
 % \begin{Verbatim}
 % \renewcommand\d{\mathop{\mathrm{d}}\!}
 % \end{Verbatim}
-% This macro works well in ``display math'' and ``text math'', but we still 
-% face the following three problems:
+% 虽然这个命令在 “行间公式” 和 “行内公式” 都很有效，但是依然存在以下三个问题:
 % \begin{enumerate}
-% \item The skip before ``d'' would still be reserved in ``text fraction'', 
-% which is regarded bad. For example, |$\d y/\d x$| produces 
+% \item "d"前面的空白在行内分式中依旧出现. 比如, |$\d y/\d x$| 会呈现为
 % $\mathrm{d}y/\,\mathrm{d}x$;
 %
-% \item This |\d| command cannot be used out of math mode. In another word, 
-% |\d{o}| would not produce ``\d{o}'' in text;
+% \item |\d| 不能用于数学模式以外的地方. 即 |\d{o}| 不能用于在文本模式下产生
+% 类似``\d{o}'' 的效果;
 %
-% \item The skip between ``d'' and the expression before it can be regarded 
-% as a product operator. A product operator is definitely a binary operator. 
+% \item "d" 和它前面表达式之间的空白被视作乘积符号，而一个算符通常应该是二元的。
 %
-% Take |\cdot| ($\cdot$) as an example.
-% A binary operator reserves small skips before and after itself when in 
-% ``display math'' or ``text math'' such as $x\cdot y$, but the skips will 
-% disappear in ``script math'' or ``script script math'' such as $a^{x\cdot y}$. 
-% Thus the small skip should also disappear in script, but |$a^{f(x)\d x}$| 
-% still produces $a^{f(x)\,\mathrm{d}x}$ but not $a^{f(x)\d x}$.
+% 拿 |\cdot| ($\cdot$) 来举例.
+% 当在 “行间公式” 或 “行内公式” 下 $x\cdot y$ 间的算符会保留，但在“角标公式”
+% 或“脚本脚本公式”则该消失，例如 $a^{x\cdot y}$。
+% 因此，该空白也应该在角标下消失，但是 |$a^{f(x)\d x}$| 出来的
+% $a^{f(x)\,\mathrm{d}x}$ 依旧会存在空白，而不是期望中的 $a^{f(x)\d x}$。
 % \end{enumerate}
-% To solve these problems, you can try this package.
+% 如果想解决以上问题，你可以试试本宏包。
 %
 % \section{引言}
-% To load this package, write
+% 在导言区使用以下命令即可加载本宏包
 % \begin{Verbatim}
 % \usepackage{fixdif}
 % \end{Verbatim}
-% in the preamble. In your document, 
+% 在文档区使用以下命令
 % \begin{Verbatim}
 % \[ f(x)\d x,\quad\frac{\d y}{\d x},\quad\d y/\d x,\quad a^{y\d x}. \]
 % \end{Verbatim}
-% will produce
+% 将会出现
 % \[f(x)\d x,\quad \frac{\d y}{\d x},\quad \d y/\d x,\quad a^{y\d x}.\]
 %
 % \subsection{兼容 \pkg{unicode-math}}
-% If you are using \pkg{unicode-math} package with \XeTeX/\LuaTeX{} 
-% in your document, you must pay attention to the following items:
+% 如果你已经在文档里使用 \XeTeX/\LuaTeX{} 下的 \pkg{unicode-math} 宏包，
+% 那你得注意下面的问题:
 % \begin{itemize}
-% \item If you want to use \pkg{amsmath} package, make sure that the 
-% \pkg{unicode-math} package is loaded \emph{after} \pkg{amsmath}. 
+% \item 如果要使用 \pkg{amsmath} 宏包, 请确保
+% \pkg{unicode-math} 在 \pkg{amsmath} \emph{之后} 被加载。
 %
-% \item You had better specify the math font through the \cs{setmathfont} 
-% command provided by \pkg{unicode-math} in order to avoid bad skip in  
-% text fraction like $\d y/\d x$.
+% \item 最好使用 \pkg{unicode-math} 提供的 \cs{setmathfont} 命令指定数学字体
+% 以避免在行内分式情况下出现多余空白的问题, 如 $\d y/\d x$.
 %
-% \item Load the \pkg{fixdif} package \emph{after} \pkg{unicode-math}.
+% \item \pkg{fixdif}宏包 一定要在 \pkg{unicode-math} \emph{之后} 加载。
 % \end{itemize}
-% Therefore the correct order is
+% 因此，正确的顺序应该是
 % \begin{Verbatim}
 % \usepackage{amsmath}
 % \usepackage{unicode-math}
@@ -700,7 +693,7 @@ Copyright (C) 2022 by Zhang Tingxuan <alphaztx@163.com>.
 % \usepackage[nopartial]{fixdif}
 % \end{Verbatim}
 %
-% \section{微分算子\cs{d}的定义}
+% \section{微分算子的定义}
 % \noindent\emph{Attention! The commands in this section 
 % can be used in preamble only!}
 %
@@ -793,7 +786,7 @@ Copyright (C) 2022 by Zhang Tingxuan <alphaztx@163.com>.
 % after \verb|\begin{document}|. For example, \verb|$x\mathdif{\Delta}\psi$| 
 % will get $x\mathdif{\Delta}\psi$.
 %
-% \section{Examples}
+% \section{参考示例}
 %
 % This section shows how to use this package properly in your document.
 %
@@ -831,7 +824,7 @@ Copyright (C) 2022 by Zhang Tingxuan <alphaztx@163.com>.
 % regarded \textsl{ordinary} but not \textsl{inner} so that the 
 % small skip will disappear. Maybe ``$-\d x$'' is just okay.
 %
-% \section{The source code}
+% \section{源代码}
 %    \begin{macrocode}
 %<*package>
 %    \end{macrocode}
