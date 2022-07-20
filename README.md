@@ -6,19 +6,16 @@ The basic commands are:
 
 - `\d`: for differential operator "d" in math mode and under-dot accent in text;
 - `\partial`: a "fixed" partial differential operator command;
-- `\letdif`: an interface for defining new commands for differential operators.
+- `\letdif`: an interface for defining new commands for differential operators;
+- `\mathdif`: a commmand in math mode, you can use it just like `\mathop`, etc.
 
 See `fixdif.pdf` for more. Happy TeXing!
 
 ## License
 
-This work may be distributed and/or modified under the conditions of the [LaTeX Project Public License](http://www.latex-project.org/lppl.txt), either version 1.3c of this license or (at your option) any later version.
-
-## Releases
-
-See the “Releases” on the right for the latest version.
-
-You can also download the latest version on [CTAN](https://www.ctan.org/pkg/fixdif).
+This work may be distributed and/or modified under the conditions of
+the [LaTeX Project Public License](http://www.latex-project.org/lppl.txt),
+either version 1.3c of this license or (at your option) any later version.
 
 ------
 
