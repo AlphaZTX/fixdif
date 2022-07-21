@@ -26,7 +26,9 @@
 %%             and the derived files fixdif.ins,
 %%                                   fixdif.sty,
 %%                                   fixdif.pdf,
-%%                               and README.md.
+%%                                   fixdif-zh-cn.pdf,
+%%                                   README.md,
+%%                               and README-zh-cn.md.
 %% 
 \input docstrip.tex
 \keepsilent
@@ -53,7 +55,9 @@
             and the derived files fixdif.ins,
                                   fixdif.sty,
                                   fixdif.pdf,
-                              and README.md.
+                                  fixdif-zh-cn.pdf,
+                                  README.md,
+                              and README-zh-cn.md.
 
 \endpreamble
 
@@ -61,8 +65,11 @@
   \usedir{tex/latex/fixdif}
     \file{\jobname.sty}      {\from{\jobname.dtx}{package}}
   \usedir{doc/latex/fixdif}
+  \file{\jobname.tex}{\from{\jobname.dtx}{driver}}
+  \file{\jobname-zh-cn.tex}{\from{\jobname.dtx}{driver-zh-cn}}
   \nopreamble\nopostamble
     \file{README.md}         {\from{\jobname.dtx}{readme}}
+    \file{README-zh-cn.md}         {\from{\jobname.dtx}{readme-zh-cn}}
 }
 
 \obeyspaces

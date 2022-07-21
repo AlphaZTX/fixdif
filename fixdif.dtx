@@ -20,7 +20,9 @@
 %           and the derived files fixdif.ins,
 %                                 fixdif.sty,
 %                                 fixdif.pdf,
-%                             and README.md.
+%                                 fixdif-zh-cn.pdf,
+%                                 README.md,
+%                             and README-zh-cn.md.
 %
 %<*internal>
 \iffalse
@@ -50,6 +52,30 @@ either version 1.3c of this license or (at your option) any later version.
 
 Copyright (C) 2022 by Zhang Tingxuan <alphaztx@163.com>.
 %</readme>
+%
+%<*readme-zh-cn>
+# `fixdif` 宏包
+
+`fixDif`宏包提供了一个用于定义微分算子样式的接口.
+
+基本命令如下:
+
+- `\d`: 既是数学模式下的微分算子"d"，又是文本中的重音下点；
+- `\partial`: “修正”偏微分算子命令；
+- `\letdif`: 用于定义微分算子的新命令的接口；
+- `\mathdif`: 数学模式下的命令，你可以像`\mathop`等命令一样使用。
+
+更多信息请参考 `fixdif-zh-cn.pdf`。 Happy TeXing!
+
+## 许可证
+
+本作品可以在 [LaTeX Project Public License](http://www.latex-project.org/lppl.txt)
+的条件下分发和/或修改，可以是本许可证的1.3c版本，也可以是（根据您的选择）任何更高版本。
+
+------
+
+Copyright (C) 2022 by Zhang Tingxuan <alphaztx@163.com>.
+%</readme-zh-cn>
 %
 %<*internal>
 \fi
@@ -85,7 +111,9 @@ Copyright (C) 2022 by Zhang Tingxuan <alphaztx@163.com>.
             and the derived files fixdif.ins,
                                   fixdif.sty,
                                   fixdif.pdf,
-                              and README.md.
+                                  fixdif-zh-cn.pdf,
+                                  README.md,
+                              and README-zh-cn.md.
 
 \endpreamble
 
@@ -99,8 +127,11 @@ Copyright (C) 2022 by Zhang Tingxuan <alphaztx@163.com>.
 %</internal>
 %<*install>
   \usedir{doc/latex/fixdif}
+  \file{\jobname.tex}{\from{\jobname.dtx}{driver}}
+  \file{\jobname-zh-cn.tex}{\from{\jobname.dtx}{driver-zh-cn}}
   \nopreamble\nopostamble
     \file{README.md}         {\from{\jobname.dtx}{readme}}
+    \file{README-zh-cn.md}         {\from{\jobname.dtx}{readme-zh-cn}}
 }
 
 \obeyspaces
@@ -130,6 +161,10 @@ Copyright (C) 2022 by Zhang Tingxuan <alphaztx@163.com>.
 %
 %<*driver>
 \ProvidesFile{fixdif.dtx}[2022/7/19 (c) Copyright 2022 by Zhang Tingxuan]
+\expandafter\ifx\csname ifenglish\endcsname\relax
+    \expandafter\newif\csname ifenglish\endcsname
+    \englishtrue
+\fi
 \documentclass{ltxdoc}
 
 \usepackage{xcolor}
@@ -200,10 +235,87 @@ Copyright (C) 2022 by Zhang Tingxuan <alphaztx@163.com>.
   \DocInput{\jobname.dtx}
 \end{document}
 %</driver>
+%
+%<*driver-zh-cn>
+\ProvidesFile{fixdif.dtx}[2022/7/19 (c) Copyright 2022 by Zhang Tingxuan]
+\expandafter\ifx\csname ifenglish\endcsname\relax
+    \expandafter\newif\csname ifenglish\endcsname
+    \englishfalse
+\fi
+\documentclass{ctxdoc}
+
+\usepackage{xcolor}
+\definecolor{titlecolor}{RGB}{0,12,160}
+\usepackage{doc}
+\usepackage{fancyvrb}
+\fvset{xleftmargin=2.5em,fontsize=\small,gobble=2}
+\MakeShortVerb|
+
+\usepackage{hologo}
+\def\XeTeX{\hologo{XeTeX}}
+\def\LuaTeX{\hologo{LuaTeX}}
+
+\def\pkg{\textsf}
+\def\opt{\texttt}
+
+\title{The \pkg{fixdif} Package}
+\author{Zhang Tingxuan}
+\date{2022/7/19\quad Version 1.3a\thanks{\url{https://github.com/AlphaZTX/fixdif}}}
+
+\usepackage{hyperref}
+\hypersetup{
+  pdftitle   = {The fixdif Package},
+  pdfauthor  = {Zhang Tingxuan},
+  pdfcreator = {pdfLaTeX/XeLaTeX/LuaLaTeX},
+  linkcolor  = black,
+  urlcolor   = titlecolor!80!black,
+}
+\def\pkg{\textsf}
+
+\makeatletter
+\renewcommand\section{\@startsection{section}{1}{\z@}%
+  {-2.5ex plus -1ex minus -.2ex}%
+  {1ex plus .2ex}%
+  {\normalfont\Large\bfseries\color{titlecolor}}}
+\renewcommand\subsection{\@startsection{subsection}{2}{\z@}%
+  {-2ex plus -1ex minus -.2ex}%
+  {.5ex plus .2ex}%
+  {\normalfont\normalsize\bfseries\color{titlecolor}}}
+\renewcommand\paragraph{\@startsection{paragraph}{4}{\z@}%
+  {.8ex plus .4ex minus .2ex}%
+  {-1em}%
+  {\normalfont\normalsize\bfseries\color{titlecolor}}}
+\def\UrlAlphabet{%
+      \do\a\do\b\do\c\do\d\do\e\do\f\do\g\do\h\do\i\do\j%
+      \do\k\do\l\do\m\do\n\do\o\do\p\do\q\do\r\do\s\do\t%
+      \do\u\do\v\do\w\do\x\do\y\do\z\do\A\do\B\do\C\do\D%
+      \do\E\do\F\do\G\do\H\do\I\do\J\do\K\do\L\do\M\do\N%
+      \do\O\do\P\do\Q\do\R\do\S\do\T\do\U\do\V\do\W\do\X%
+      \do\Y\do\Z}
+\def\UrlDigits{\do\1\do\2\do\3\do\4\do\5\do\6\do\7\do\8\do\9\do\0}
+\g@addto@macro{\UrlBreaks}{\UrlOrds}
+\g@addto@macro{\UrlBreaks}{\UrlAlphabet}
+\g@addto@macro{\UrlBreaks}{\UrlDigits}
+\ifdefined\Umathcode
+  \usepackage{unicode-math}
+  \setmathfont{Latin Modern Math}
+\fi
+\makeatother
+
+\usepackage{fixdif}
+
+\linespread{1.05}
+\parskip6pt plus 2pt minus 1pt
+\parindent2.5em
+
+\begin{document}
+  \DocInput{fixdif.dtx}
+\end{document}
+%</driver-zh-cn>
 % \fi
-% 
+% \ifenglish
 % \maketitle
-% 
+%
 % \begin{abstract}
 % The \pkg{fixdif} package redefines the \cs{d} command in \LaTeX{} 
 % and provides an interface to define commands for differential operators.
@@ -462,6 +574,235 @@ Copyright (C) 2022 by Zhang Tingxuan <alphaztx@163.com>.
 %    \begin{macrocode}
 %<*package>
 %    \end{macrocode}
+%
+%  \else
+% \maketitle
+%
+% \begin{abstract}
+% \pkg{fixDif} 宏包在 \LaTeX{} 中重定义了\cs{d}命令，
+% 并提供来定义微分算子命令的接口。
+%
+% 本宏包不仅可用 pdf\TeX, \XeTeX{}, \LuaTeX 编译，
+% 还兼容 \XeTeX{} 和 \LuaTeX 下的 \pkg{unicode-math} 宏包。
+% \end{abstract}
+%
+% \tableofcontents
+%
+% \section{背景}
+% 为求美观，我们通常会在微分算子和它前面的表达式之间保留一定的空白\footnote{See 
+% \url{https://tex.stackexchange.com/questions/14821/whats-the-proper-way-to-typeset-a-differential-operator}.}. 
+% 比如以下情况：
+% \[f(x)\mathrm{d}x\qquad\mbox{和}\qquad f(x)\d x.\]
+% 我们通常会认为左边比右边好看，在 $f(x)$ 和 $\d x$ 之间的小空白可以
+% 视为$f(x)$和$\d x$的乘积符号。
+%
+% 因此，有些用户会喜欢定义这样的命令:
+% \begin{Verbatim}
+% \renewcommand\d{\mathop{\mathrm{d}}\!}
+% \end{Verbatim}
+% 虽然这个命令在 “行间公式” 和 “行内公式” 都很有效，但是依然存在以下三个问题:
+% \begin{enumerate}
+% \item "d"前面的空白在行内分式中依旧出现. 比如, |$\d y/\d x$| 会呈现为
+% $\mathrm{d}y/\,\mathrm{d}x$;
+%
+% \item |\d| 不能用于数学模式以外的地方. 即 |\d{o}| 不能用于在文本模式下产生
+% 类似``\d{o}'' 的效果;
+%
+% \item "d" 和它前面表达式之间的空白被视作乘积符号，而一个算符通常应该是二元的。
+%
+% 拿 |\cdot| ($\cdot$) 来举例.
+% 当在 “行间公式” 或 “行内公式” 下 $x\cdot y$ 间的算符会保留，但在“角标公式”
+% 或“脚本脚本公式”则该消失，例如 $a^{x\cdot y}$。
+% 因此，该空白也应该在角标下消失，但是 |$a^{f(x)\d x}$| 出来的
+% $a^{f(x)\,\mathrm{d}x}$ 依旧会存在空白，而不是期望中的 $a^{f(x)\d x}$。
+% \end{enumerate}
+% 如果想解决以上问题，你可以试试本宏包。
+%
+% \section{引言}
+% 在导言区使用以下命令即可加载本宏包
+% \begin{Verbatim}
+% \usepackage{fixdif}
+% \end{Verbatim}
+% 在文档区使用以下命令
+% \begin{Verbatim}
+% \[ f(x)\d x,\quad\frac{\d y}{\d x},\quad\d y/\d x,\quad a^{y\d x}. \]
+% \end{Verbatim}
+% 将会出现
+% \[f(x)\d x,\quad \frac{\d y}{\d x},\quad \d y/\d x,\quad a^{y\d x}.\]
+%
+% \subsection{兼容 \pkg{unicode-math}}
+% 如果你已经在文档里使用 \XeTeX/\LuaTeX{} 下的 \pkg{unicode-math} 宏包，
+% 那你得注意下面的问题:
+% \begin{itemize}
+% \item 如果要使用 \pkg{amsmath} 宏包，请确保
+% \pkg{unicode-math} 在 \pkg{amsmath} \emph{之后} 被加载。
+%
+% \item 最好使用 \pkg{unicode-math} 提供的 \cs{setmathfont} 命令指定数学字体
+% 以避免在行内分式情况下出现多余空白的问题，如 $\d y/\d x$.
+%
+% \item \pkg{fixdif}宏包 一定要在 \pkg{unicode-math} \emph{之后} 加载。
+% \end{itemize}
+% 因此，正确的顺序应该是
+% \begin{Verbatim}
+% \usepackage{amsmath}
+% \usepackage{unicode-math}
+% \setmathfont{...}[...]
+% \usepackage{fixdif}
+% \end{Verbatim}
+%
+% \subsection{兼容 \pkg{hyperref}}
+% 如果你还想同时使用 \pkg{hyperref} 宏包，那 \pkg{hyperref} 必须在 \pkg{fixdif}
+% \emph{之前} 被加载，否则 \pkg{hyperref} 宏包会报冲突。
+%
+% \subsection{基础命令以及宏包参数}
+% \DescribeMacro{\d}
+% \pkg{fixdif} 宏包提供的\cs{d}命令，既可以用作数学模式下的微分算子"d"，也可以用作文本模式下
+% 的重音标记命令，就像 \LaTeX{} 或 plain \TeX{} 里的 \cs{d} 命令一样。比如
+% \begin{Verbatim}
+% $\d x$ 和 \d x
+% \end{Verbatim}
+% 将会显示为 ``$\d x$ 和 \d x''。
+%
+% \paragraph{改变 \cs{d} 的字体}
+% 数学模式下\cs{d}有两种基本的宏包选项风格 --- \opt{rm} 和 \opt{normal}. 默认为
+% 将|$f(x)\d x$| 显示为  $f(x)\d x$ 的 \opt{rm}。
+% 如果想用 \opt{normal} 选项，那么
+% \begin{Verbatim}
+% \usepackage[normal]{fixdif}
+% \end{Verbatim}
+% 此时 |$f(x)\d x$| 将会是 $f(x)\,dx$。
+%
+% \DescribeMacro{\resetdfont}
+% 除了以上两种字体，你还可以在导言区使用 \cs{resetdfont} 命令来改变 \cs{d} 的字体：
+% \begin{Verbatim}
+% \resetdfont{\mathsf}
+% \end{Verbatim}
+% 此时 |\d x| 将会是  $\mathsf{d}x$。
+%
+% \paragraph{控制 \cs{partial} 的行为}
+% \DescribeMacro{\partial}
+% 默认情况下，\cs{partial} 也会被判定为一个数学模式下的微分算子。如果你想要改变这种行为，
+% 你可以用 \opt{nopartial} 选项：
+% \begin{Verbatim}
+% \usepackage[nopartial]{fixdif}
+% \end{Verbatim}
+%
+% \section{微分算子的定义}
+% \noindent\emph{注意！本节涉及到的命令只能在导言区使用！}
+%
+% \subsection{单命令定义}
+% \noindent\textcolor{titlecolor}{\cs{letdif}\marg{cmd}\marg{csname}}\DescribeMacro{\letdif}
+% \hfill(preamble only)
+%
+% \cs{letdif} 命令有两个参数 --- 第一个是被新定义的命令名，第二个是数学模式下一个字符的
+% \emph{名字}（不包含\backslash），这可以让该字符产生像\cs{d}一样的前置自适应空白，比如使用
+% \begin{Verbatim}
+% \letdif{\vr}{delta}
+% \end{Verbatim}
+% 后，|\vr| 就将会在 $\delta$ (|\delta|) 前加上自适应空白。
+%
+% 借助 \cs{letdif} 命令，我们可以轻松地用数学字符的代码名进行重定义。比如
+% \begin{Verbatim}
+% \letdif{\delta}{delta}
+% \end{Verbatim}
+% 此时， |\delta| 自己也会拥有像微分算子那样的前置自适应空白。
+%
+% \cs{letdif} 命令的的第二个参数 \meta{csname} 还可以反复使用。
+%
+% \noindent\textcolor{titlecolor}{\cs{letdif*}\marg{cmd}\marg{csname}}\DescribeMacro{\letdif*}
+% \hfill(preamble only)
+%
+% 这个命令与 \cs{letdif} 基本相同，但是它会在微分算子之后进行校正。这在当数学字体通过 \pkg{unicode-math}
+% 宏包设置的情况下非常友好，比如
+% \begin{Verbatim}
+% \usepackage{unicode-math}
+% \setmathfont{TeX Gyre Termes Math}
+% \usepackage{fixdif}
+% \letdif{\vr}{updelta}
+% \end{Verbatim}
+% 会导致 |\vr| 之后追加不应有的空白，但如果你将上面的最后一行代码改成
+% \begin{Verbatim}
+% \letdif*{\vr}{updelta}
+% \end{Verbatim}
+% 就会得到正常的反馈。
+%
+% \subsection{多命令或字符串定义}
+%
+% \noindent\textcolor{titlecolor}{\cs{newdif}\marg{cmd}\marg{multi-cmd}}\DescribeMacro{\newdif}
+% \hfill(without correction, preamble only)\\
+% \noindent\textcolor{titlecolor}{\cs{newdif*}\marg{cmd}\marg{multi-cmd}}\DescribeMacro{\newdif*}
+% \hfill(with correction, preamble only)
+%
+% 这些命令的第一个参数依旧是待定义的命令名；且第二个参数必须包含 \emph{不止一个} \LaTeX{} 命令。
+% 比如，在已经加载 \pkg{xcolor} 宏包的情况下你可以使用以下代码，
+% \begin{Verbatim}
+% \newdif{\redsfd}{\textsf{\color{red}d}}
+% \end{Verbatim}
+% 然后就会得到一个名为 |\redsfd| 的微分算子命令。再比如，使用
+% \begin{Verbatim}
+% \newdif{\D}{\mathrm{D}}
+% \end{Verbatim}
+% 你会得到一个名为 |\D| 的 "D"  微分算子。
+%
+% 如果你的第二个参数只有一个 \LaTeX{} 命令，比如 |\Delta|，建议使用 \cs{letdif} 或 \cs{letdif*} 替代。
+%
+% \cs{newdif} 和 \cs{newdif*} 会对 \meta{cmd} 做是否已有定义的检查，如果有则会报错。
+%
+% \noindent\textcolor{titlecolor}{\cs{renewdif}\marg{cmd}\marg{multi-cmd}}\DescribeMacro{\renewdif}
+% \hfill(without correction, preamble only)\\
+% \noindent\textcolor{titlecolor}{\cs{renewdif*}\marg{cmd}\marg{multi-cmd}}\DescribeMacro{\renewdif*}
+% \hfill(with correction, preamble only)
+%
+% 这两个命令和 \cs{newdif}、\cs{newdif*} 基本相同。
+% 唯一的区别是 \cs{renewdif} and \cs{renewdif*} 会对
+% \meta{cmd} 进行 \emph{未} 定义检查。如果没有定义，则会报错。
+%
+% \section{暂时使用微分算子}
+%
+% \noindent\textcolor{titlecolor}{\cs{mathdif}\marg{symbol}}\DescribeMacro{\mathdif}
+% \hfill(without correction, in math mode only)\\ 
+%\noindent\textcolor{titlecolor}{\cs{mathdif*}\marg{symbol}}\DescribeMacro{\mathdif*}
+% \hfill(with correction, in math mode only)
+%
+% 这两个命令只能在数学模式下使用，且只能用于文档区，即 \verb|\begin{document}| 之后。
+% 比如 \verb|$x\mathdif{\Delta}\psi$| 会得到 $x\mathdif{\Delta}\psi$。
+%
+% \section{参考示例}
+%
+% 本节给出如何在你的文档里正确使用本宏包的示例。
+%
+% 比如以下两种例子:
+% \begin{Verbatim}
+% \letdif{\Delta}{Delta}       % 例 1，在导言区使用
+% \letdif{\nabla}{nabla}       % 例 2，在导言区使用
+% \end{Verbatim}
+% 实际上，第二种情况更加合理。虽然有时候我们会把 ``$\Delta$'' 用作拉普拉斯算子（等价于 $\nabla^2$），
+% 但有时候 ``$\Delta$'' 又只能被当做变量或者函数使用。因此，推荐为 ``$\Delta$'' 用作
+% 拉普拉斯算子时单独定义一个命令，而 \verb|\Delta| 仅作为一个普通的数学符号 ``$\Delta$'' 存在。
+% 然而，在绝大多数情况下，``$\nabla$'' 被视为 nabla 运算符，因此无需保留 ``$\nabla$''。
+% 所以可以这样修改以上代码：
+% \begin{Verbatim}
+% \letdif{\laplacian}{Delta}   % Example 1, corrected, in preamble
+% \end{Verbatim}
+% 我们还可以使用 \pkg{xparse} 宏包定义一个新的命令：
+% \begin{Verbatim}
+% \letdif{\nabla}{nabla}
+% \DeclareDocumentCommand{ \laplacian }{ s }{
+%   \IfBooleanTF{#1}{\mathdif{\Delta}}{\nabla^2}
+% }
+% \end{Verbatim}
+% 这样 \verb|\laplacian| 会得到 $\nabla^2$，而 \verb|\laplacian*| 会得到 $\Delta$。
+%
+% \paragraph{处理 ``$+$'' and ``$-$''}
+% 使用 \verb|$-\d x$|，就会得到 ``$-\d x$''，但如果你觉得应该是 ``$-{\d x}$'' 。那你可以使用
+% \verb|-{\d x}|。``\verb|\d x|'' 在一个 \emph{group} 会被视作 \textsl{ordinary}， 而不是
+% \textsl{inner}，所以自适应空白会消失不见。当然，个人更推荐使用``$-\d x$''。
+%
+% \section{源代码}
+%    \begin{macrocode}
+%<*package>
+%    \end{macrocode}
+% \fi
 % Check the \TeX{} format and provides the package name.
 %    \begin{macrocode}
 \NeedsTeXFormat{LaTeX2e}
