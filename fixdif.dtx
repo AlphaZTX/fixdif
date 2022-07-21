@@ -60,7 +60,7 @@ Copyright (C) 2022 by Zhang Tingxuan <alphaztx@163.com>.
 
 基本命令如下:
 
-- `\d`: 既是数学模式下的微分算子"d"，又是文本中的下点重音；
+- `\d`: 既是数学模式下的微分算子"d"，又是文本中的重音下点；
 - `\partial`: “修正”偏微分算子命令；
 - `\letdif`: 用于定义微分算子的新命令的接口；
 - `\mathdif`: 数学模式下的命令，你可以像`\mathop`等命令一样使用。
@@ -341,7 +341,7 @@ Copyright (C) 2022 by Zhang Tingxuan <alphaztx@163.com>.
 % \begin{Verbatim}
 % \renewcommand\d{\mathop{\mathrm{d}}\!}
 % \end{Verbatim}
-% This macro works well in  “行间公式” and “行内公式”, but we still 
+% This macro works well in ``display math'' and ``text math'', but we still 
 % face the following three problems:
 % \begin{enumerate}
 % \item The skip before ``d'' would still be reserved in ``text fraction'', 
@@ -356,7 +356,7 @@ Copyright (C) 2022 by Zhang Tingxuan <alphaztx@163.com>.
 %
 % Take |\cdot| ($\cdot$) as an example.
 % A binary operator reserves small skips before and after itself when in 
-%  “行间公式” or “行内公式” such as $x\cdot y$, but the skips will 
+% ``display math'' or ``text math'' such as $x\cdot y$, but the skips will 
 % disappear in ``script math'' or ``script script math'' such as $a^{x\cdot y}$. 
 % Thus the small skip should also disappear in script, but |$a^{f(x)\d x}$| 
 % still produces $a^{f(x)\,\mathrm{d}x}$ but not $a^{f(x)\d x}$.
@@ -583,7 +583,7 @@ Copyright (C) 2022 by Zhang Tingxuan <alphaztx@163.com>.
 % 并提供来定义微分算子命令的接口。
 %
 % 本宏包不仅可用 pdf\TeX, \XeTeX{}, \LuaTeX 编译，
-% 还兼容 \XeTeX{} and \LuaTeX 下的 \pkg{unicode-math} 宏包。
+% 还兼容 \XeTeX{} 和 \LuaTeX 下的 \pkg{unicode-math} 宏包。
 % \end{abstract}
 %
 % \tableofcontents
@@ -592,7 +592,7 @@ Copyright (C) 2022 by Zhang Tingxuan <alphaztx@163.com>.
 % 为求美观，我们通常会在微分算子和它前面的表达式之间保留一定的空白\footnote{See 
 % \url{https://tex.stackexchange.com/questions/14821/whats-the-proper-way-to-typeset-a-differential-operator}.}. 
 % 比如以下情况：
-% \[f(x)\mathrm{d}x\qquad\mbox{and}\qquad f(x)\d x.\]
+% \[f(x)\mathrm{d}x\qquad\mbox{和}\qquad f(x)\d x.\]
 % 我们通常会认为左边比右边好看，在 $f(x)$ 和 $\d x$ 之间的小空白可以
 % 视为$f(x)$和$\d x$的乘积符号。
 %
@@ -634,11 +634,11 @@ Copyright (C) 2022 by Zhang Tingxuan <alphaztx@163.com>.
 % 如果你已经在文档里使用 \XeTeX/\LuaTeX{} 下的 \pkg{unicode-math} 宏包，
 % 那你得注意下面的问题:
 % \begin{itemize}
-% \item 如果要使用 \pkg{amsmath} 宏包, 请确保
+% \item 如果要使用 \pkg{amsmath} 宏包，请确保
 % \pkg{unicode-math} 在 \pkg{amsmath} \emph{之后} 被加载。
 %
 % \item 最好使用 \pkg{unicode-math} 提供的 \cs{setmathfont} 命令指定数学字体
-% 以避免在行内分式情况下出现多余空白的问题, 如 $\d y/\d x$.
+% 以避免在行内分式情况下出现多余空白的问题，如 $\d y/\d x$.
 %
 % \item \pkg{fixdif}宏包 一定要在 \pkg{unicode-math} \emph{之后} 加载。
 % \end{itemize}
@@ -688,50 +688,43 @@ Copyright (C) 2022 by Zhang Tingxuan <alphaztx@163.com>.
 % \end{Verbatim}
 %
 % \section{微分算子的定义}
-% \noindent\emph{Attention! The commands in this section 
-% can be used in preamble only!}
+% \noindent\emph{注意！本节涉及到的命令只能在导言区使用！}
 %
 % \subsection{单命令定义}
 % \noindent\textcolor{titlecolor}{\cs{letdif}\marg{cmd}\marg{csname}}\DescribeMacro{\letdif}
 % \hfill(preamble only)
 %
-% The \cs{letdif} command has two arguments~--- the first is the newly-defined 
-% command and the second is the control sequence \emph{name} of a math character, 
-% that is, a command without its backslash. For example,
+% \cs{letdif} 命令有两个参数 --- 第一个是被新定义的命令名，第二个是数学模式下一个字符的
+% \emph{名字}（不包含\backslash），这可以让该字符产生像\cs{d}一样的前置自适应空白，比如使用
 % \begin{Verbatim}
 % \letdif{\vr}{delta}
 % \end{Verbatim}
-% then |\vr| will produce a $\delta$ (|\delta|) with automatic skip 
-% before it.
+% 后，|\vr| 就将会在 $\delta$ (|\delta|) 前加上自适应空白。
 %
-% Through the \cs{letdif} command, we can redefine a math character command 
-% by its name. For example, 
+% 借助 \cs{letdif} 命令，我们可以轻松地用数学字符的代码名进行重定义。比如
 % \begin{Verbatim}
 % \letdif{\delta}{delta}
 % \end{Verbatim}
-% then |\delta| itself will be a differential operator.
+% 此时， |\delta| 自己也会拥有像微分算子那样的前置自适应空白。
 %
-% The second argument \meta{csname} of \cs{letdif} command can be used 
-% repeatedly.
+% \cs{letdif} 命令的的第二个参数 \meta{csname} 还可以反复使用。
 %
 % \noindent\textcolor{titlecolor}{\cs{letdif*}\marg{cmd}\marg{csname}}\DescribeMacro{\letdif*}
 % \hfill(preamble only)
 %
-% This command is basically the same as \cs{letdif}, but this command will 
-% patch a correction after the differential operator. This is very useful 
-% when a math font is setted through \pkg{unicode-math} package. For example, 
+% 这个命令与 \cs{letdif} 基本相同，但是它会在微分算子之后进行校正。这在当数学字体通过 \pkg{unicode-math}
+% 宏包设置的情况下非常友好，比如
 % \begin{Verbatim}
 % \usepackage{unicode-math}
 % \setmathfont{TeX Gyre Termes Math}
 % \usepackage{fixdif}
 % \letdif{\vr}{updelta}
 % \end{Verbatim}
-% this will cause bad negative skip after |\vr|, but if you change the last 
-% line into
+% 会导致 |\vr| 之后追加不应有的空白，但如果你将上面的最后一行代码改成
 % \begin{Verbatim}
 % \letdif*{\vr}{updelta}
 % \end{Verbatim}
-% you will get the result correct.
+% 就会得到正常的反馈。
 %
 % \subsection{多命令或字符串定义}
 %
@@ -740,34 +733,29 @@ Copyright (C) 2022 by Zhang Tingxuan <alphaztx@163.com>.
 % \noindent\textcolor{titlecolor}{\cs{newdif*}\marg{cmd}\marg{multi-cmd}}\DescribeMacro{\newdif*}
 % \hfill(with correction, preamble only)
 %
-% The first argument of these commands is the newly-defined command; and the 
-% second argument should contain \emph{more than one} tokens.
-% For example, if you have loaded the \pkg{xcolor} package, 
-% you can use the following line:
+% 这些命令的第一个参数依旧是待定义的命令名；且第二个参数必须包含 \emph{不止一个} \LaTeX{} 命令。
+% 比如，在已经加载 \pkg{xcolor} 宏包的情况下你可以使用以下代码，
 % \begin{Verbatim}
 % \newdif{\redsfd}{\textsf{\color{red}d}}
 % \end{Verbatim}
-% Then you get the |\redsfd| as a differential operator. Take another example,
+% 然后就会得到一个名为 |\redsfd| 的微分算子命令。再比如，使用
 % \begin{Verbatim}
 % \newdif{\D}{\mathrm{D}}
 % \end{Verbatim}
-% Then you get |\D| for an uppercase upright ``D'' as a differential operator.
+% 你会得到一个名为 |\D| 的 "D"  微分算子。
 %
-% If your second argument contains only one command like |\Delta|, 
-% it's recommended to use \cs{letdif} or \cs{letdif*} instead.
+% 如果你的第二个参数只有一个 \LaTeX{} 命令，比如 |\Delta|，建议使用 \cs{letdif} 或 \cs{letdif*} 替代。
 %
-% \cs{newdif} and \cs{newdif*} will check whether \meta{cmd} has been defined 
-% already. If so, an error message will be given.
+% \cs{newdif} 和 \cs{newdif*} 会对 \meta{cmd} 做是否已有定义的检查，如果有则会报错。
 %
 % \noindent\textcolor{titlecolor}{\cs{renewdif}\marg{cmd}\marg{multi-cmd}}\DescribeMacro{\renewdif}
 % \hfill(without correction, preamble only)\\
 % \noindent\textcolor{titlecolor}{\cs{renewdif*}\marg{cmd}\marg{multi-cmd}}\DescribeMacro{\renewdif*}
 % \hfill(with correction, preamble only)
 %
-% These two commands are basically the same as \cs{newdif} and \cs{newdif*}. 
-% The only difference is that \cs{renewdif} and \cs{renewdif*} will check 
-% whether \meta{cmd} has \emph{not} been defined yet. If so, an error message 
-% will be given.
+% 这两个命令和 \cs{newdif}、\cs{newdif*} 基本相同。
+% 唯一的区别是 \cs{renewdif} and \cs{renewdif*} 会对
+% \meta{cmd} 进行 \emph{未} 定义检查。如果没有定义，则会报错。
 %
 % \section{暂时使用微分算子}
 %
@@ -776,47 +764,39 @@ Copyright (C) 2022 by Zhang Tingxuan <alphaztx@163.com>.
 %\noindent\textcolor{titlecolor}{\cs{mathdif*}\marg{symbol}}\DescribeMacro{\mathdif*}
 % \hfill(with correction, in math mode only)
 %
-% These two commands can be used in math mode only, more specifically, 
-% after \verb|\begin{document}|. For example, \verb|$x\mathdif{\Delta}\psi$| 
-% will get $x\mathdif{\Delta}\psi$.
+% 这两个命令只能在数学模式下使用，且只能用于文档区，即 \verb|\begin{document}| 之后。
+% 比如 \verb|$x\mathdif{\Delta}\psi$| 会得到 $x\mathdif{\Delta}\psi$。
 %
 % \section{参考示例}
 %
-% This section shows how to use this package properly in your document.
+% 本节给出如何在你的文档里正确使用本宏包的示例。
 %
-% Take the two examples below:
+% 比如以下两种例子:
 % \begin{Verbatim}
-% \letdif{\Delta}{Delta}       % Example 1, in preamble
-% \letdif{\nabla}{nabla}       % Example 2, in preamble
+% \letdif{\Delta}{Delta}       % 例 1，在导言区使用
+% \letdif{\nabla}{nabla}       % 例 2，在导言区使用
 % \end{Verbatim}
-% Actually, the second example is more reasonable. 
-% Sometimes, we take ``$\Delta$'' as laplacian (equivalent to $\nabla^2$), 
-% while ``$\Delta$'' can also be regarded as a variable 
-% or function at some other times. Consequently, it's better to save 
-% a different command for ``$\Delta$'' as laplacian while reserve 
-% \verb|\Delta| as a command for an ordinary math symbol ``$\Delta$''. 
-% However, in the vast majority of cases, ``$\nabla$'' is regarded as 
-% nabla operator so there is no need to save a different command for 
-% ``$\nabla$''. Then we can correct the code above:
+% 实际上，第二种情况更加合理。虽然有时候我们会把 ``$\Delta$'' 用作拉普拉斯算子（等价于 $\nabla^2$），
+% 但有时候 ``$\Delta$'' 又只能被当做变量或者函数使用。因此，推荐为 ``$\Delta$'' 用作
+% 拉普拉斯算子时单独定义一个命令，而 \verb|\Delta| 仅作为一个普通的数学符号 ``$\Delta$'' 存在。
+% 然而，在绝大多数情况下，``$\nabla$'' 被视为 nabla 运算符，因此无需保留 ``$\nabla$''。
+% 所以可以这样修改以上代码：
 % \begin{Verbatim}
 % \letdif{\laplacian}{Delta}   % Example 1, corrected, in preamble
 % \end{Verbatim}
-% With the \pkg{xparse} package, we can define the command in another method:
+% 我们还可以使用 \pkg{xparse} 宏包定义一个新的命令：
 % \begin{Verbatim}
 % \letdif{\nabla}{nabla}
 % \DeclareDocumentCommand{ \laplacian }{ s }{
 %   \IfBooleanTF{#1}{\mathdif{\Delta}}{\nabla^2}
 % }
 % \end{Verbatim}
-% Then \verb|\laplacian| produces $\nabla^2$ and \verb|\laplacian*| 
-% produces $\Delta$.
+% 这样 \verb|\laplacian| 会得到 $\nabla^2$，而 \verb|\laplacian*| 会得到 $\Delta$。
 %
-% \paragraph{Dealing with ``$+$'' and ``$-$''}
-% If you input \verb|$-\d x$|, you'll get ``$-\d x$'' in your document. 
-% However, if you think ``$-{\d x}$'' is better, you can input 
-% \verb|-{\d x}|. The ``\verb|\d x|'' in a \emph{group} will be 
-% regarded \textsl{ordinary} but not \textsl{inner} so that the 
-% small skip will disappear. Maybe ``$-\d x$'' is just okay.
+% \paragraph{处理 ``$+$'' and ``$-$''}
+% 使用 \verb|$-\d x$|，就会得到 ``$-\d x$''，但如果你觉得应该是 ``$-{\d x}$'' 。那你可以使用
+% \verb|-{\d x}|。``\verb|\d x|'' 在一个 \emph{group} 会被视作 \textsl{ordinary}， 而不是
+% \textsl{inner}，所以自适应空白会消失不见。当然，个人更推荐使用``$-\d x$''。
 %
 % \section{源代码}
 %    \begin{macrocode}
