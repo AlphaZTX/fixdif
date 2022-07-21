@@ -651,44 +651,38 @@ Copyright (C) 2022 by Zhang Tingxuan <alphaztx@163.com>.
 % \end{Verbatim}
 %
 % \subsection{兼容 \pkg{hyperref}}
-% If you want to use the \pkg{hyperref} package simultaneously, 
-% remember to load \pkg{hyperref} \emph{before} the \pkg{fixdif} package, 
-% otherwise the \pkg{hyperref} package will cause conflicts.
+% 如果你还想同时使用 \pkg{hyperref} 宏包，那 \pkg{hyperref} 必须在 \pkg{fixdif}
+% \emph{之前} 被加载，否则 \pkg{hyperref} 宏包会报冲突。
 %
 % \subsection{基础命令以及宏包参数}
 % \DescribeMacro{\d}
-% The \pkg{fixdif} package provides a \cs{d} command for the differential 
-% operator ``d'' in math mode. When in text, \cs{d} behaves just like 
-% the old \cs{d} command in \LaTeX{} or plain \TeX{} as an 
-% accent command. For example, 
+% \pkg{fixdif} 宏包提供的\cs{d}命令，既可以用作数学模式下的微分算子"d"，也可以用作文本模式下
+% 的重音标记命令，就像 \LaTeX{} 或 plain \TeX{} 里的 \cs{d} 命令一样。比如
 % \begin{Verbatim}
-% $\d x$ and \d x
+% $\d x$ 和 \d x
 % \end{Verbatim}
-% will produce ``$\d x$ and \d x''.
+% 将会显示为 ``$\d x$ 和 \d x''。
 %
-% \paragraph{Set the font of \cs{d}}
-% There are two basic package options to control the \cs{d}'s style in math 
-% mode~--- \opt{rm} and \opt{normal}. The default option is \opt{rm}, in which 
-% case |$f(x)\d x$| produces $f(x)\d x$. If you chose the \opt{normal} option, 
-% for example
+% \paragraph{改变 \cs{d} 的字体}
+% 数学模式下\cs{d}有两种基本的宏包选项风格 --- \opt{rm} 和 \opt{normal}. 默认为
+% 将|$f(x)\d x$| 显示为  $f(x)\d x$ 的 \opt{rm}。
+% 如果想用 \opt{normal} 选项，那么
 % \begin{Verbatim}
 % \usepackage[normal]{fixdif}
 % \end{Verbatim}
-% |$f(x)\d x$| would produces $f(x)\,dx$.
+% 此时 |$f(x)\d x$| 将会是 $f(x)\,dx$。
 %
 % \DescribeMacro{\resetdfont}
-% Besides the previous two optional fonts, you can reset the font of 
-% differential operator ``d'' through \cs{resetdfont} command in preamble:
+% 除了以上两种字体，你还可以在导言区使用 \cs{resetdfont} 命令来改变 \cs{d} 的字体：
 % \begin{Verbatim}
 % \resetdfont{\mathsf}
 % \end{Verbatim}
-% then |\d x| will produce $\mathsf{d}x$.
+% 此时 |\d x| 将会是  $\mathsf{d}x$。
 %
-% \paragraph{Control the behavior of \cs{partial}}
+% \paragraph{控制 \cs{partial} 的行为}
 % \DescribeMacro{\partial}
-% In default, \cs{partial} will also be regarded as a differential operator 
-% in this package. If you don't like this default setting, you can use the 
-% \opt{nopartial} option:
+% 默认情况下，\cs{partial} 也会被判定为一个数学模式下的微分算子。如果你想要改变这种行为，
+% 你可以用 \opt{nopartial} 选项：
 % \begin{Verbatim}
 % \usepackage[nopartial]{fixdif}
 % \end{Verbatim}
