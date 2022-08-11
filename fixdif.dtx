@@ -131,7 +131,7 @@ Copyright (C) 2022 by Zhang Tingxuan <alphaztx@163.com>.
 %</internal>
 %
 %<*driver>
-\ProvidesFile{fixdif.dtx}[2022/7/27 (c) Copyright 2022 by Zhang Tingxuan]
+\ProvidesFile{fixdif.dtx}[2022/8/11 (c) Copyright 2022 by Zhang Tingxuan]
 \documentclass{ltxdoc}
 
 \usepackage{xcolor}
@@ -150,7 +150,7 @@ Copyright (C) 2022 by Zhang Tingxuan <alphaztx@163.com>.
 
 \title{The \pkg{fixdif} Package}
 \author{Zhang Tingxuan}
-\date{2022/7/27\quad Version 1.3b\thanks{\url{https://github.com/AlphaZTX/fixdif}}}
+\date{2022/8/11\quad Version 1.4\thanks{\url{https://github.com/AlphaZTX/fixdif}}}
 
 \usepackage{hyperref}
 \hypersetup{
@@ -176,12 +176,12 @@ Copyright (C) 2022 by Zhang Tingxuan <alphaztx@163.com>.
   {-1em}%
   {\normalfont\normalsize\bfseries\color{titlecolor}}}
 \def\UrlAlphabet{%
-      \do\a\do\b\do\c\do\d\do\e\do\f\do\g\do\h\do\i\do\j%
-      \do\k\do\l\do\m\do\n\do\o\do\p\do\q\do\r\do\s\do\t%
-      \do\u\do\v\do\w\do\x\do\y\do\z\do\A\do\B\do\C\do\D%
-      \do\E\do\F\do\G\do\H\do\I\do\J\do\K\do\L\do\M\do\N%
-      \do\O\do\P\do\Q\do\R\do\S\do\T\do\U\do\V\do\W\do\X%
-      \do\Y\do\Z}
+  \do\a\do\b\do\c\do\d\do\e\do\f\do\g\do\h\do\i\do\j%
+  \do\k\do\l\do\m\do\n\do\o\do\p\do\q\do\r\do\s\do\t%
+  \do\u\do\v\do\w\do\x\do\y\do\z\do\A\do\B\do\C\do\D%
+  \do\E\do\F\do\G\do\H\do\I\do\J\do\K\do\L\do\M\do\N%
+  \do\O\do\P\do\Q\do\R\do\S\do\T\do\U\do\V\do\W\do\X%
+  \do\Y\do\Z}
 \def\UrlDigits{\do\1\do\2\do\3\do\4\do\5\do\6\do\7\do\8\do\9\do\0}
 \g@addto@macro{\UrlBreaks}{\UrlOrds}
 \g@addto@macro{\UrlBreaks}{\UrlAlphabet}
@@ -328,6 +328,8 @@ Copyright (C) 2022 by Zhang Tingxuan <alphaztx@163.com>.
 % \begin{Verbatim}
 % \usepackage[nopartial]{fixdif}
 % \end{Verbatim}
+% If you use the default setting, \cs{partialnondif} yields the ordinary 
+% symbol $\partialnondif$.
 %
 % \section{Define commands for differential operators}
 % \noindent\emph{Attention! The commands in this section 
@@ -354,7 +356,11 @@ Copyright (C) 2022 by Zhang Tingxuan <alphaztx@163.com>.
 % then |\delta| itself will be a differential operator.
 %
 % The second argument \meta{csname} of \cs{letdif} command can be used 
-% repeatedly.
+% repeatedly. If you want to get the ordinary symbol of 
+% \texttt{\char`\\\textnormal{\meta{csname}}}, you can input 
+% \texttt{\char`\\\textnormal{\meta{csname}}nondif} in math mode. 
+% For example, in default, \DescribeMacro{\partialnondif}\cs{partialnondif} 
+% yields the old partial symbol ``$\partialnondif$''.
 %
 % \noindent\textcolor{titlecolor}{\cs{letdif*}\marg{cmd}\marg{csname}}\DescribeMacro{\letdif*}
 % \hfill(preamble only)
@@ -467,7 +473,7 @@ Copyright (C) 2022 by Zhang Tingxuan <alphaztx@163.com>.
 % Check the \TeX{} format and provides the package name.
 %    \begin{macrocode}
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{fixdif}[2022/7/27 Interface for defining differential operators.]
+\ProvidesPackage{fixdif}[2022/8/11 Interface for defining differential operators.]
 %    \end{macrocode}
 % 
 % \subsection{Control the skip between slashes and differential operator}
@@ -523,8 +529,7 @@ Copyright (C) 2022 by Zhang Tingxuan <alphaztx@163.com>.
 %    \end{macrocode}
 % Control the behavior of \cs{partial}.
 %    \begin{macrocode}
-\def\fixdif@partial@true{1}
-\ifx\fixdif@partial@bool\fixdif@partial@true
+\ifnum\fixdif@partial@bool=1
   \AtEndOfPackage{\letdif{\partial}{partial}}
 \fi
 %    \end{macrocode}
@@ -562,26 +567,26 @@ Copyright (C) 2022 by Zhang Tingxuan <alphaztx@163.com>.
 \def\@letdif#1#2{\AtBeginDocument{%
 %    \end{macrocode}
 % |#1| is the final command; |#2| is the ``control sequence name'' of |#1|'s initial definition.
-% Here we create a command (\cs{csname}|#2@old|\cs{endcsname}) to restore |#2|.
+% Here we create a command (\cs{csname}|#2nonfif|\cs{endcsname}) to restore |#2|.
 %    \begin{macrocode}
-  \ifcsname #2@old\endcsname\else%
-  \expandafter\let\csname #2@old\expandafter\endcsname
+  \ifcsname #2nondif\endcsname\else%
+  \expandafter\let\csname #2nondif\expandafter\endcsname
     \csname #2\endcsname%
   \fi%
 %    \end{macrocode}
 % Finally let |#1| be the new command.
 %    \begin{macrocode}
-  \gdef#1{\mathinner{\csname #2@old\endcsname}\mup@tch}%
+  \gdef#1{\mathinner{\csname #2nondif\endcsname}\mup@tch}%
 }}
 %    \end{macrocode}
 % The definition of \cs{s@letdif} is similar, but with the patch for negative skips.
 %    \begin{macrocode}
 \def\s@letdif#1#2{\AtBeginDocument{%
-  \ifcsname #2@old\endcsname\else%
-  \expandafter\let\csname #2@old\expandafter\endcsname
+  \ifcsname #2nondif\endcsname\else%
+  \expandafter\let\csname #2nondif\expandafter\endcsname
     \csname #2\endcsname%
   \fi%
-  \gdef#1{\mathinner{\s@beforep@tch\csname #2@old\endcsname\mbox{}}\mup@tch}%
+  \gdef#1{\mathinner{\s@beforep@tch\csname #2nondif\endcsname\mbox{}}\mup@tch}%
 }}
 \def\letdif{\@ifstar\s@letdif\@letdif}
 %    \end{macrocode}

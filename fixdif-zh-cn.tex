@@ -1,0 +1,399 @@
+\documentclass[letterpaper,11pt]{article}
+\date{2022/08/11\quad Version 1.4%
+  \thanks{源代码见~\hyperref{https://github.com/AlphaZTX/fixdif}{}{}{GitHub} 
+  或~\hyperref{https://www.ctan.org/pkg/fixdif}{}{}{CTAN}。}
+}
+\ifcsname XeTeXversion\endcsname\else\errmessage{本文档需使用 xelatex 编译}\fi
+
+\usepackage{indentfirst,enumitem}
+
+\usepackage{manfnt,marginnote}
+\newcounter{fixdifattention}
+\newcommand\attention[1][1]{\setcounter{fixdifattention}{1}%
+  \ifnum#1=1 \def\attentiontext{\dbend}\else
+  \def\attentiontext{\loop\dbend\,%
+    \addtocounter{fixdifattention}{1}%
+    \ifnum \value{fixdifattention}<#1 \repeat\dbend}\fi%
+  \marginnote{\makebox[0pt][r]{\attentiontext}}}
+
+\usepackage{xcolor}
+\definecolor{titlecolor}{RGB}{0,128,8}
+\definecolor{lnkcolor}{RGB}{0,12,160}
+
+\usepackage{fontspec}
+\setmainfont{STIX Two Text}
+\setsansfont{Inter}[Scale=MatchLowercase]
+\setmonofont{Noto Sans Mono}[Scale=MatchLowercase]
+\usepackage{xeCJK,xeCJKfntef}
+\setCJKmainfont{Source Han Serif SC}
+\setCJKsansfont{Source Han Sans SC}
+\setCJKmonofont{Source Han Sans SC}
+\renewcommand\abstractname{摘\hskip.8em 要}
+\renewcommand\contentsname{目\hskip.8em 录}
+\DeclareRobustCommand\zhemph{\CJKunderdot}
+\usepackage{unicode-math}
+\setmathfont{STIX Two Math}
+
+\usepackage{hyperref}
+\hypersetup{pdffitwindow,
+  pdftitle   = {fixdif 宏包（中文文档）},
+  pdfauthor  = {AlphaZTX},
+  pdfcreator = {pdfLaTeX/XeLaTeX/LuaLaTeX},
+  linkcolor  = black,
+  urlcolor   = lnkcolor,
+}
+
+\usepackage{doc}
+\DeclareRobustCommand\marg[1]{\texttt{\{}\meta{#1}\texttt{\}}}
+
+\usepackage{fancyvrb}
+\fvset{xleftmargin=2em,fontsize=\small}
+\MakeShortVerb|
+
+\usepackage{hologo}
+\DeclareRobustCommand\pdflatex{\hologo{pdfLaTeX}}
+\DeclareRobustCommand\xelatex{\hologo{XeLaTeX}}
+\DeclareRobustCommand\lualatex{\hologo{LuaLaTeX}}
+
+\DeclareRobustCommand\pkg{\textsf}
+\DeclareRobustCommand\opt{\texttt}
+
+\makeatletter
+\renewcommand\section{\@startsection{section}{1}{\z@}%
+  {-2.5ex plus -1ex minus -.2ex}%
+  {1ex plus .2ex}%
+  {\normalfont\Large\bfseries\color{titlecolor}}}
+\renewcommand\subsection{\@startsection{subsection}{2}{\z@}%
+  {-2ex plus -1ex minus -.2ex}%
+  {.5ex plus .2ex}%
+  {\normalfont\normalsize\bfseries\color{titlecolor}}}
+\renewcommand\paragraph{\@startsection{paragraph}{4}{\z@}%
+  {.8ex plus .4ex minus .2ex}%
+  {-1em}%
+  {\indent\normalfont\normalsize\bfseries\color{titlecolor}}}
+\gdef\fd@name{\char"66\char"69\char"78\char"64\char"69\char"66}
+\def\ps@plain{\let\@mkboth\@gobbletwo
+  \def\@oddhead{\hbox{}\llap{\raisebox{-24.44cm}[0pt][0pt]{\sffamily\bfseries%
+    \color{titlecolor!5}\fontsize{238pt}{0pt}\selectfont\fd@name}%
+    \hspace*{-14.72cm}}\hfil\hbox{}\rlap{\raisebox{.2cm}[0pt][0pt]{%
+    \hspace*{1.4cm}\sffamily\bfseries\color{titlecolor!35}%
+    \fontsize{128pt}{0pt}\selectfont\thepage}}}%
+  \def\@oddfoot{\reset@font}\let\@evenhead\@oddhead\let\@evenfoot\@oddfoot}
+\gdef\@title{\bfseries\pkg{\fd@name}\Uchar"5B8F\Uchar"5305}
+\gdef\@author{\Uchar"5F20\Uchar"5EAD\Uchar"7444}
+\makeatother
+\pagestyle{plain}
+
+\usepackage{fixdif}
+
+\linespread{1.2}
+\parskip8pt plus 4pt minus 2pt
+\parindent2em
+
+\begin{document}
+\maketitle
+\thispagestyle{plain}
+
+\begin{abstract}
+\pkg{fixdif} 宏包重定义了 \LaTeX{} 中的 \cs{d} 命令，使之在数学模式下可以得到
+微分算符 $\d{}$，在正文中仍然是原来的重音符号（例如 |\d{o}| 得到 \d o）。
+
+本宏包支持不同的编译方式，在 \pdflatex、\xelatex{} 和 \lualatex{} 均可使用。
+本宏包在 \xelatex{} 和 \lualatex{} 下兼容 \pkg{unicode-math} 宏包。
+\end{abstract}
+
+{\parskip0pt\tableofcontents}
+
+\section{背景}
+我们一般更推荐在微分算符与前面的内容之间留出一个比较小的间距\footnote{%
+见 \hyperref{https://tex.stackexchange.com/questions/14821/whats-the-%
+proper-way-to-typeset-a-differential-operator}{}{}{\TeX.SX}。}，比如在下面展示的
+两种情况中，右边的比左边的更好：
+\[f(x)\mathrm{d}x\qquad\text{\&}\qquad f(x)\d x.\]
+微分算符 $\d{}$ 与其前面的表达式之间的间距可认为是乘积的一种表示。
+
+有些用户习惯使用下面的方法定义一个宏：
+\begin{Verbatim}
+\renewcommand\d{\mathop{\mathrm{d}}\!}
+\end{Verbatim}
+这个命令在很多情况下不会产生什么大问题，但是在下面给出的 3 个使用场景下就会出现
+不容忽略的问题：
+\begin{enumerate}
+\item 当 $\d{}$ 出现在用斜杠表示的分式的分母中时，$\d{}$ 前面会留出多余的间距。
+例如 |$\d y/\d x$| 得到 $\mathrm{d}y/\,\mathrm{d}x$；
+
+\item 上面定义的 \cs{d} 会覆盖原来的 \cs{d} 命令。在 \LaTeX{} 的原始定义下，\cs{d} 
+是一个重音符号命令，用来产生字母下方的点。如果使用了上面的定义，则在正文中 |\d{o}| 
+将不会得到“\d{o}”而是得到一条报错。
+
+\item 前面说到，$\d{}$ 前面的间距可以认为是乘积的一种表示，因此这个间距可被视为
+一个二元运算符。在上下标中时，二元运算符在两侧的间距应当消失，例如 $a+b$ 放到上标
+中就会变成 $^{a+b}$。但是通过上面的方法定义的 \cs{d} 在上下标中，其前面的间距不会
+消失，例如 |$a^{f(x)\d x}$| 会得到 $a^{f(x)\,\mathrm{d}x}$ 而不是 $a^{f(x)\d x}$。
+\end{enumerate}
+面对以上问题，解决方案是使用本宏包。
+
+\section{手动安装}
+\pkg{fixdif} 宏包最早于 2022 年上传至 CTAN，从 2023 年起被 \TeX\ Live 默认收录。
+对于 \TeX\ Live 2018\textasciitilde2022， 如果不能通过 \texttt{tlmgr} 获取 
+\pkg{fixdif}，则需手动安装。如果你的 \TeX\ Live 版本低于 2018，则可能无法正常
+使用 \pkg{fixdif}，如需使用本宏包，建议将 \TeX\ Live 更新至最新版。
+
+手动安装分为以下几步：
+
+\textcolor{titlecolor}{第一步，}点击下面的链接下载 \pkg{fixdif} 宏包的压缩包：
+\begin{center}
+\hyperref{https://mirrors.ctan.org/macros/latex/contrib/fixdif.zip}{}{}%
+  {\bfseries Get \pkg{fixdif}.zip on CTAN}
+\end{center}
+下载完成后，解压缩，即可得到：
+\begin{itemize}[itemsep=0pt,parsep=0pt]
+\item \pkg{fixdif}.dtx；
+\item \pkg{fixdif}.ins；
+\item \pkg{fixdif}-zh-cn.tex；
+\item \pkg{fixdif}.pdf；
+\item \pkg{fixdif}-zh-cn.pdf；
+\item README.md。
+\end{itemize}
+现在你需要获得 \pkg{fixdif}.sty 并将其安装到正确的路径中。
+
+\textcolor{titlecolor}{第二步，}在解压缩 \pkg{fixdif}.zip 得到的 
+\pkg{fixdif}.dtx 所在的路径下打开命令行
+（cmd/Powershell/Windows Terminal/Bash/Terminal），执行下面的命令：
+\begin{Verbatim}[formatcom=\bfseries]
+latex fixdif.ins
+\end{Verbatim}
+即可在当前路径下得到 \pkg{fixdif}.sty。这一步得到的 \pkg{fixdif}.log 可以删除。
+
+\textcolor{titlecolor}{第三步，}将对应的文件移动至对应的路径下。假设 \TeX{} 发行版
+的 TDS 根目录为 \texttt{TEXMF}（例如 Windows 系统在 \texttt{C:/} 下安装的 
+\TeX\ Live 2021 的 \texttt{TEXMF} 为 \texttt{C:/texlive/2021/texmf-dist}），
+按下面的目录结构复制宏包中的文件：
+\begin{Verbatim}
+TEXMF/tex/latex/fixdif/fixdif.sty
+TEXMF/doc/latex/fixdif/fixdif.pdf
+TEXMF/doc/latex/fixdif/fixdif-zh-cn.pdf
+TEXMF/doc/latex/fixdif/fixdif-zh-cn.tex
+TEXMF/doc/latex/fixdif/README.md
+TEXMF/source/latex/fixdif/fixdif.dtx
+TEXMF/source/latex/fixdif/fixdif.ins
+\end{Verbatim}
+不存在的文件夹需要自行创建。
+
+\textcolor{titlecolor}{第四步，}在命令行执行下面的命令：
+\begin{Verbatim}[formatcom=\bfseries]
+texhash
+\end{Verbatim}
+刷新文件名数据库。这一步的命令可在任意路径下执行，但可能需要管理员权限（Windows 用户
+可以以管理员身份运行 cmd/Powershell/Windows Terminal，类 Unix 用户可以使用 
+\texttt{sudo}）。
+
+完成上面四个步骤后，即可在非最新版的 \TeX\ Live 中使用 \pkg{fixdif} 宏包了。
+\begin{center}
+\color{titlecolor}\itshape Happy \TeX ing!
+\end{center}
+
+\section{宏包简介}
+在导言区添加
+\begin{Verbatim}
+\usepackage{fixdif}
+\end{Verbatim}
+以使用本宏包。使用了本宏包后，在正文中输入
+\begin{Verbatim}
+\[ f(x)\d x,          \quad    \frac{\d y}{\d x}, 
+   \quad\d y/\d x,    \quad    a^{y\d x}.         \]
+\end{Verbatim}
+会得到
+\[f(x)\d x,\quad \frac{\d y}{\d x},\quad \d y/\d x,\quad a^{y\d x}.\]
+
+\subsection{对 \pkg{unicode-math} 宏包的兼容}
+如果你在文档中使用了 \pkg{unicode-math} 宏包（编译方式为 \xelatex{} 或 
+\lualatex{}），需注意以下几点：
+\begin{itemize}
+\item 如需使用 \pkg{amsmath} 宏包，请在 \pkg{unicode-math} \zhemph{之前}%
+载入 \pkg{amsmath}。
+
+\item 在载入 \pkg{unicode-math} 后通过 \cs{setmathfont} 指定数学字体。
+若使用默认的数学字体，建议显式指明 |\setmathfont{Latin Modern Math}|，
+这样可以避免在用斜杠表示的分式中产生不好的间距；
+
+\item \pkg{fixdif} 宏包需要在 \pkg{unicode-math} 宏包\zhemph{后}载入。
+\end{itemize}
+从而，导言区正确的顺序是：
+\begin{Verbatim}
+\usepackage[..]{amsmath}
+\usepackage[..]{unicode-math}
+\setmathfont{...}[...]
+\usepackage{fixdif}
+\end{Verbatim}
+
+\subsection{对 \pkg{hyperref} 宏包的兼容}
+如果你使用了 \pkg{hyperref} 宏包，需注意 \pkg{fixdif} 宏包需要在 \pkg{hyperref} 
+之后载入，否则会引起冲突。
+
+\subsection{基本命令及宏包选项}
+\DescribeMacro{\d}
+\pkg{fixdif} 宏包提供了 \cs{d} 命令用于在数学模式中得到微分算符“$\d{}$”。
+在正文中，\cs{d} 会保留其原有的重音符号的功能。例如：
+\begin{Verbatim}
+$\d x$ 和 \d x
+\end{Verbatim}
+以上代码会得到“$\d x$ 和 \d x”。
+
+\paragraph{设置 \cs{d} 的字体}
+本宏包提供了两个选项来控制 \cs{d} 的字体，分别为 \opt{rm} 和 \opt{normal}。
+其中，\opt{rm} 为默认值，表示 \cs{d} 的字体为罗马体（\cs{mathrm}）；
+\opt{normal} 表示 \cs{d} 的字体为数学模式下的常规体（\cs{mathnormal}），
+效果类似于意大利体。例如在载入宏包时开启 \opt{normal} 选项：
+\begin{Verbatim}
+\usepackage[normal]{fixdif} % 导言区
+\end{Verbatim}
+正文中的 |$f(x)\d x$| 会得到 $f(x)\,dx$。
+
+\DescribeMacro{\resetdfont}
+除了上面的两种字体，\pkg{fixdif} 也支持通过在导言区使用 \cs{resetdfont} 命令
+自定义 \cs{d} 的字体。例如：
+\begin{Verbatim}
+\resetdfont{\mathsf}        % 导言区
+\end{Verbatim}
+在此设置下，正文中的 |\d x| 会得到 $\mathsf{d}x$。
+
+\paragraph{\cs{partial} 的行为}
+\DescribeMacro{\partial}
+\pkg{fixdif} 宏包将 \cs{partial} 归为微分算符，正文中的 \cs{partial} 前面也会有
+自动的间距。例如 |$\partial x\partial y$| 会得到 $\partial x\partial y$。
+若不需要将 \cs{partial} 视为微分算符，可以开启 \opt{nopartial} 选项：
+\begin{Verbatim}
+\usepackage[nopartial]{fixdif}
+\end{Verbatim}
+在默认的设置下，作为普通数学符号的 $\partialnondif$ 可以使用 
+\hypertarget{cs:partialnondif}{\cs{partialnondif}} 输入。
+
+\section{定义微分算符命令}
+{\attention[6]}注意！本节中的命令只能在\zhemph{导言区}中使用！
+
+\subsection{通过命令名称定义微分算符命令}
+\noindent\textcolor{titlecolor}{\cs{letdif}\marg{cmd}\marg{csname}}%
+\DescribeMacro{\letdif}\hfill（仅限在导言区使用）
+
+\cs{letdif} 命令有两个参数：第一个参数 \meta{cmd} 是新定义的微分算符命令，
+以反斜杠开头；第二个参数 \meta{csname} 是需要设置为微分算符的数学符号的命令名称，
+也就是一个完整的命令去掉最前面的反斜杠。举个例子：
+\begin{Verbatim}
+\letdif{\vr}{delta}
+\end{Verbatim}
+这样定义的 |\vr| 在数学模式中就相当于一个 |\delta|，但是它的前面会加上自动的间距。
+
+通过 \cs{letdif} 命令，我们可以原封不动地把一个数学符号变成微分算符。例如：
+\begin{Verbatim}
+\letdif{\delta}{delta}
+\end{Verbatim}
+这样 |\delta| 本身就会具备微分算符的属性。
+
+\cs{letdif} 的第二个参数 \meta{csname} 可以重复使用，也就是说，你可以把同一个符号
+定义为两个不同的微分算符命令。例如：
+\begin{Verbatim}
+\letdif{\nabla}{nabla}
+\letdif{\grad}{nabla}
+\end{Verbatim}
+这样 |\nabla| 和 |\grad| 都会得到微分算符 $\nabla$。
+
+{\attention[2]}如需得到原来的普通数学符号 \cs{\meta{csname}}，只需在数学模式中输入 
+\cs{\meta{csname}nondif}。例如\hyperlink{cs:partialnondif}{%
+\textcolor{titlecolor!75!black}{前面介绍的 \cs{partialnondif}}}。
+
+\noindent\textcolor{titlecolor}{\cs{letdif*}\marg{cmd}\marg{csname}}%
+\DescribeMacro{\letdif*}\hfill（仅限在导言区使用）
+
+\cs{letdif*} 与 \cs{letdif} 基本相同，唯一的区别在于 \cs{letdif*} 会在微分算符
+后面添加额外的矫正。建议在使用了 \pkg{unicode-math} 的文档中使用 \cs{letdif*}。
+例如：
+\begin{Verbatim}
+\usepackage{unicode-math}
+\setmathfont{TeX Gyre Termes Math}
+\usepackage{fixdif}
+\letdif{\vr}{updelta}
+\end{Verbatim}
+这样定义的 |\vr| 后面就会有负的间距，如果不希望得到这一负间距，可以把上面的最后一行
+改为：
+\begin{Verbatim}
+\letdif*{\vr}{updelta}
+\end{Verbatim}
+
+\subsection{定义包含多个命令或字符的微分算符命令}
+
+\noindent\textcolor{titlecolor}{\cs{newdif}\marg{cmd}\marg{multi-cmd}}%
+\DescribeMacro{\newdif}\hfill（仅限在导言区使用，后无矫正）\\
+\noindent\textcolor{titlecolor}{\cs{newdif*}\marg{cmd}\marg{multi-cmd}}%
+\DescribeMacro{\newdif*}\hfill（仅限在导言区使用，后有矫正）
+
+上面两个命令的第一个参数 \meta{cmd} 是新定义的微分算符命令，第二个参数 
+\meta{multi-cmd} 是超过一个字（token）的命令组合或字符串。举个例子，在 
+\pkg{xcolor} 宏包下可以这样使用：
+\begin{Verbatim}
+\newdif{\redsfd}{\textsf{\color{red}d}}
+\end{Verbatim}
+这样就定义了一个 |\redsfd| 命令。再举一个例子：
+\begin{Verbatim}
+\newdif{\D}{\mathrm{D}}
+\end{Verbatim}
+这样，在正文中输入 |$y\D x$| 就会得到 $y\,\mathrm{D}x$。
+
+{\attention[2]}如果 \cs{newdif}(\texttt{*}) 后面的第二个参数 \meta{multi-cmd} 
+仅包含一个字（token），也就是一个命令或字符，请使用 \cs{letdif}(\texttt{*}) 命令
+而不是 \cs{newdif}(\texttt{*})。
+
+\cs{newdif}(\texttt{*}) 会检查第一个参数 \meta{cmd} 是否已经被定义，若 \meta{cmd} 
+已被定义，则会报错。
+
+\noindent\textcolor{titlecolor}{\cs{renewdif}\marg{cmd}\marg{multi-cmd}}\DescribeMacro{\renewdif}
+\hfill（仅限在导言区使用，后无矫正）\\
+\noindent\textcolor{titlecolor}{\cs{renewdif*}\marg{cmd}\marg{multi-cmd}}\DescribeMacro{\renewdif*}
+\hfill（仅限在导言区使用，后有矫正）
+
+这两个命令用于将 \meta{cmd} 重定义为微分算符命令。
+若 \meta{cmd} 还未被定义，则会报错。
+
+\section{正文中临时的微分算符命令}
+\noindent\textcolor{titlecolor}{\cs{mathdif}\marg{symbol}}%
+\DescribeMacro{\mathdif}\hfill（仅限在数学模式使用，后无矫正）\\ 
+\noindent\textcolor{titlecolor}{\cs{mathdif*}\marg{symbol}}%
+\DescribeMacro{\mathdif*}\hfill（仅限在数学模式使用，后有矫正）
+
+如需在正文中少量使用某一数学符号作为微分算符，可以使用上面的两个命令。
+例如，\verb|$x\mathdif{\Delta}\psi$| 会得到 $x\mathdif{\Delta}\psi$。
+
+\section{举例}
+
+本节将告诉你如何在文档中正确使用 \pkg{fixdif} 宏包。
+
+看以下两行代码：
+\begin{Verbatim}
+\letdif{\Delta}{Delta}
+\letdif{\nabla}{nabla}
+\end{Verbatim}
+哪一行更合理一些？答案是第二行。
+
+有时，大写的“$\Delta$”会被用作拉普拉斯算符（与 $\nabla^2$ 意义相同）；
+另一些时候，大写的“$\Delta$”会被当作变量或函数。所以对 $\Delta$ 作为
+拉普拉斯算符和变量或函数的情况分别进行定义是更好的做法。我们建议将 |$\Delta$| 
+作为 $\Delta$ 的原始定义进行保留，对表示拉普拉斯算符的 $\Delta$ 另加定义。
+从而我们这样修改上面的第一行：
+\begin{Verbatim}
+\letdif{\laplacian}{Delta}
+\end{Verbatim}
+如果你比较擅长使用 \pkg{xparse} 宏包的接口，你也可以采用下面的方法：
+\begin{Verbatim}
+\letdif{\nabla}{nabla}
+\DeclareDocumentCommand{ \laplacian }{ s }{
+  \IfBooleanTF { #1 } { \mathdif{\Delta} } { \nabla^2 }
+}
+\end{Verbatim}
+这样，|\laplacian| 会得到 $\nabla^2$，|\laplacian*| 会得到 $\Delta$。
+
+\paragraph{处理正负号与微分算符之间的间距}
+输入 |$-\d x$| 会得到 $-\d x$。如果你不希望在正负号与微分算符之间保留
+一定的间距，可以输入 |$-{\d x}$|，这样就会得到 $-{\d x}$。
+不过话说回来，$-\d x$ 的效果也并非不可接受。
+
+\end{document}

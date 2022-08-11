@@ -29,7 +29,7 @@
 %%                               and README.md.
 %% 
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{fixdif}[2022/7/27 Interface for defining differential operators.]
+\ProvidesPackage{fixdif}[2022/8/11 Interface for defining differential operators.]
 \@ifpackageloaded{unicode-math}{
   \Umathcode`\/="4 "0 "002F
   \Umathcode"2044="4 "0 "2044
@@ -53,8 +53,7 @@
 \DeclareOption{nopartial}{\def\fixdif@partial@bool{0}}
 \ExecuteOptions{rm,partial}
 \ProcessOptions\relax
-\def\fixdif@partial@true{1}
-\ifx\fixdif@partial@bool\fixdif@partial@true
+\ifnum\fixdif@partial@bool=1
   \AtEndOfPackage{\letdif{\partial}{partial}}
 \fi
 \gdef\resetdfont#1{\let\@@dif\relax%
@@ -63,18 +62,18 @@
 \let\d@accent\d
 \DeclareRobustCommand\d{\ifmmode\@dif\else\expandafter\d@accent\fi}
 \def\@letdif#1#2{\AtBeginDocument{%
-  \ifcsname #2@old\endcsname\else%
-  \expandafter\let\csname #2@old\expandafter\endcsname
+  \ifcsname #2nondif\endcsname\else%
+  \expandafter\let\csname #2nondif\expandafter\endcsname
     \csname #2\endcsname%
   \fi%
-  \gdef#1{\mathinner{\csname #2@old\endcsname}\mup@tch}%
+  \gdef#1{\mathinner{\csname #2nondif\endcsname}\mup@tch}%
 }}
 \def\s@letdif#1#2{\AtBeginDocument{%
-  \ifcsname #2@old\endcsname\else%
-  \expandafter\let\csname #2@old\expandafter\endcsname
+  \ifcsname #2nondif\endcsname\else%
+  \expandafter\let\csname #2nondif\expandafter\endcsname
     \csname #2\endcsname%
   \fi%
-  \gdef#1{\mathinner{\s@beforep@tch\csname #2@old\endcsname\mbox{}}\mup@tch}%
+  \gdef#1{\mathinner{\s@beforep@tch\csname #2nondif\endcsname\mbox{}}\mup@tch}%
 }}
 \def\letdif{\@ifstar\s@letdif\@letdif}
 \long\def\@newdif#1#2{\AtBeginDocument{%
