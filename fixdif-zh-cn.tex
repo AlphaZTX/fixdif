@@ -1,5 +1,5 @@
 \documentclass[letterpaper,11pt]{article}
-\date{2022/08/11\quad Version 1.4%
+\date{2022/09/14\quad Version 1.4a%
   \thanks{源代码见~\hyperref{https://github.com/AlphaZTX/fixdif}{}{}{GitHub} 
   或~\hyperref{https://www.ctan.org/pkg/fixdif}{}{}{CTAN}。}
 }
@@ -298,9 +298,9 @@ $\d x$ 和 \d x
 \end{Verbatim}
 这样 |\nabla| 和 |\grad| 都会得到微分算符 $\nabla$。
 
-{\attention[2]}如需得到原来的普通数学符号 \cs{\meta{csname}}，只需在数学模式中输入 
-\cs{\meta{csname}nondif}。例如\hyperlink{cs:partialnondif}{%
-\textcolor{titlecolor!75!black}{前面介绍的 \cs{partialnondif}}}。
+{\attention[2]}如需得到原来的普通数学符号 \texttt{\textbackslash}\meta{csname}，
+只需在数学模式中输入 \texttt{\textbackslash}\meta{csname}\texttt{nondif}。
+例如\hyperlink{cs:partialnondif}{\textcolor{titlecolor!75!black}{前面介绍的 \cs{partialnondif}}}。
 
 \noindent\textcolor{titlecolor}{\cs{letdif*}\marg{cmd}\marg{csname}}%
 \DescribeMacro{\letdif*}\hfill（仅限在导言区使用）
