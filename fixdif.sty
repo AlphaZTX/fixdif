@@ -6,7 +6,7 @@
 %%
 %% fixdif.dtx  (with options: `package')
 %% 
-%%   Copyright (C) 2022 by Zhang Tingxuan <alphaztx@163.com>
+%%   Copyright (C) 2022-2023 by Zhang Tingxuan <alphaztx@163.com>
 %% 
 %%   This work may be distributed and/or modified under the
 %%   conditions of the LaTeX Project Public License, either
@@ -29,26 +29,36 @@
 %%                               and README.md.
 %% 
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{fixdif}[2022/10/27 Interface for defining differential operators.]
-\@ifpackageloaded{unicode-math}{
-  \Umathcode`\/="4 "0 "002F
-  \Umathcode"2044="4 "0 "2044
-  \Umathcode"2215="4 "0 "2215
-  \Umathcode"2F98="4 "0 "2F98
-  \Umathcode`\\="4 "0 "005C
-  \Umathcode"2216="4 "0 "2216
-  \Umathcode"29F5="4 "0 "29F5
-  \Umathcode"29F9="4 "0 "29F9
-}{
-  \mathcode`\/="413D
-  \mathcode`\\="426E % \backslash
-  \def\backslash{\delimiter"426E30F\relax}
-}
-\def\mup@tch{\mathchoice{\mskip-\thinmuskip}{\mskip-\thinmuskip}{}{}}
-\def\s@beforep@tch{\mathchoice{}{}{\mbox{}}{\mbox{}}}
-\DeclareOption{rm}{\@ifpackageloaded{unicode-math}
-  {\def\@@dif{\symrm{d}}}{\def\@@dif{\mathrm{d}}}}
-\DeclareOption{normal}{\def\@@dif{d}}
+\ProvidesPackage{fixdif}[2023/02/01 Interface for defining differential operators.]
+\AtBeginDocument{%
+\ifcsname symbf\endcsname%
+  \csname bool_if:cF\endcsname{g__um_main_font_defined_bool}%
+    {\csname __um_load_lm:\endcsname}%
+  \Umathcode`\/="4 \symoperators "002F%
+  \Umathcode"2044="4 \symoperators "2044%
+  \Umathcode"2215="4 \symoperators "2215%
+  \Umathcode"2F98="4 \symoperators "2F98%
+  \Umathcode`\\="4 \symoperators "005C%
+  \Umathcode"2216="4 \symoperators "2216%
+  \Umathcode"29F5="4 \symoperators "29F5%
+  \Umathcode"29F9="4 \symoperators "29F9%
+\else\ifcsname fontspec\endcsname
+  \csname bool_if:cT\endcsname{g__fontspec_math_bool}%
+    {%
+      \everymath{\mathcode`\/="413D\relax}%
+      \PackageWarning{fixdif}{Requires `no-math' option of fontspec!\MessageBreak}%
+    }% fontspec only influences "/"
+\fi\fi}
+\mathcode`\/="413D
+\mathcode`\\="426E% \backslash
+\protected\def\backslash{\delimiter"426E30F\relax}
+\def\fd@mu@p{\mathchoice{\mskip-\thinmuskip}{\mskip-\thinmuskip}{}{}{}}
+\def\s@fd@mu@p{\mathchoice{}{}{\hbox{}}{\hbox{}}}
+\DeclareOption{rm}{%
+  \AtBeginDocument{\ifcsname symbf\endcsname%
+    \gdef\@fd@dif{\symrm{d}}\fi}%
+  \gdef\@fd@dif{\mathrm{d}}}
+\DeclareOption{normal}{\gdef\@fd@dif{d}}
 \DeclareOption{partial}{\@tempswatrue}
 \DeclareOption{nopartial}{\@tempswafalse}
 \ExecuteOptions{rm,partial}
@@ -56,62 +66,64 @@
 \if@tempswa
   \AtEndOfPackage{\letdif{\partial}{partial}}
 \fi
-\gdef\resetdfont#1{\let\@@dif\relax%
-  \def\@@dif{#1{d}}}
-\def\@dif{\mathinner{\@@dif}\mup@tch}
-\let\d@accent\d
-\DeclareRobustCommand\d{\ifmmode\@dif\else\expandafter\d@accent\fi}
+\gdef\resetdfont#1{\AtBeginDocument{\let\@fd@dif\relax\gdef\@fd@dif{#1{d}}}}
+\def\fd@dif{\mathinner{\@fd@dif}\fd@mu@p}
+\AtBeginDocument{\let\fd@d@acc\d
+  \DeclareRobustCommand\d{\ifmmode\fd@dif\else\expandafter\fd@d@acc\fi}}
 \def\@letdif#1#2{\AtBeginDocument{%
   \ifcsname #2nondif\endcsname\else%
   \expandafter\let\csname #2nondif\expandafter\endcsname
     \csname #2\endcsname%
   \fi%
-  \gdef#1{\mathinner{\csname #2nondif\endcsname}\mup@tch}%
+  \DeclareRobustCommand#1{\mathinner{\csname #2nondif\endcsname}\fd@mu@p}%
 }}
 \def\s@letdif#1#2{\AtBeginDocument{%
   \ifcsname #2nondif\endcsname\else%
   \expandafter\let\csname #2nondif\expandafter\endcsname
     \csname #2\endcsname%
   \fi%
-  \gdef#1{\mathinner{\s@beforep@tch\csname #2nondif\endcsname\mbox{}}\mup@tch}%
+  \DeclareRobustCommand#1{\mathinner{\s@fd@mu@p\csname #2nondif\endcsname\hbox{}}\fd@mu@p}%
 }}
-\def\letdif{\@ifstar\s@letdif\@letdif}
+\DeclareRobustCommand\letdif{\@ifstar\s@letdif\@letdif}
+\@onlypreamble\letdif
 \long\def\@newdif#1#2{\AtBeginDocument{%
   \ifdefined#1
-    \PackageError{fixdif}{\string#1 is already defined.}
+    \PackageError{fixdif}{\string#1 is already defined}
       {Try another command instead of \string#1.}%
   \else
-    \long\gdef#1{\mathinner{#2}\mup@tch}%
+    \DeclareRobustCommand#1{\mathinner{#2}\fd@mu@p}%
   \fi%
 }}
 \long\def\s@newdif#1#2{\AtBeginDocument{%
   \ifdefined#1
-  \PackageError{fixdif}{\string#1 is already defined.}
+  \PackageError{fixdif}{\string#1 is already defined}
     {Try another command instead of \string#1.}%
   \else
-    \long\gdef#1{\s@beforep@tch\mathinner{#2\mbox{}}\mup@tch}%
+    \DeclareRobustCommand#1{\s@fd@mu@p\mathinner{#2\hbox{}}\fd@mu@p}%
   \fi%
 }}
-\def\newdif{\@ifstar\s@newdif\@newdif}
+\DeclareRobustCommand\newdif{\@ifstar\s@newdif\@newdif}
+\@onlypreamble\newdif
 \long\def\@renewdif#1#2{\AtBeginDocument{%
   \ifdefined#1
-    \long\gdef#1{\mathinner{#2}\mup@tch}%
+    \DeclareRobustCommand#1{\mathinner{#2}\fd@mu@p}%
   \else
-    \PackageError{fixdif}{\string#1 has not been defined yet.}
+    \PackageError{fixdif}{\string#1 has not been defined yet}
       {You should use \string\newdif instead of \string\renewdif.}%
   \fi%
 }}
 \long\def\s@renewdif#1#2{\AtBeginDocument{%
   \ifdefined#1
-    \long\gdef#1{\s@beforep@tch\mathinner{#2\mbox{}}\mup@tch}%
+    \DeclareRobustCommand#1{\s@fd@mu@p\mathinner{#2\hbox{}}\fd@mu@p}%
   \else
-    \PackageError{fixdif}{\string#1 has not been defined yet.}
+    \PackageError{fixdif}{\string#1 has not been defined yet}
       {You should use \string\newdif instead of \string\renewdif.}%
   \fi%
 }}
-\def\renewdif{\@ifstar\s@renewdif\@renewdif}
-\def\@mathdif#1{\mathinner{#1}\mup@tch}
-\def\s@mathdif#1{\s@beforep@tch\mathinner{#1\mbox{}}\mup@tch}
+\DeclareRobustCommand\renewdif{\@ifstar\s@renewdif\@renewdif}
+\@onlypreamble\renewdif
+\def\@mathdif#1{\mathinner{#1}\fd@mu@p}
+\def\s@mathdif#1{\s@fd@mu@p\mathinner{#1\mbox{}}\fd@mu@p}
 \DeclareRobustCommand\mathdif{\@ifstar\s@mathdif\@mathdif}
 \endinput
 %%
