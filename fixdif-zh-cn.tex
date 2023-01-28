@@ -1,25 +1,23 @@
 \documentclass[letterpaper,11pt]{article}
-\date{2022/10/27\quad Version 1.4b%
+\usepackage{fixdif}
+\date{2023/02/01\quad Version 2.0a%
   \thanks{源代码见~\hyperref{https://github.com/AlphaZTX/fixdif}{}{}{GitHub} 
   或~\hyperref{https://www.ctan.org/pkg/fixdif}{}{}{CTAN}。}
 }
 \ifcsname XeTeXversion\endcsname\else\errmessage{本文档需使用 xelatex 编译}\fi
-
-\usepackage{indentfirst,enumitem}
-
+\usepackage{indentfirst,enumitem,multicol}
+\columnsep20pt\columnseprule.4pt
 \usepackage{manfnt,marginnote}
 \newcounter{fixdifattention}
 \newcommand\attention[1][1]{\setcounter{fixdifattention}{1}%
   \ifnum#1=1 \def\attentiontext{\dbend}\else
-  \def\attentiontext{\loop\dbend\,%
+  \def\attentiontext{\loop\dbend\kern1pt%
     \addtocounter{fixdifattention}{1}%
     \ifnum \value{fixdifattention}<#1 \repeat\dbend}\fi%
-  \marginnote{\makebox[0pt][r]{\attentiontext}}}
-
+  \marginnote{\hbox to 0pt{\hss\attentiontext}}}
 \usepackage{xcolor}
 \definecolor{titlecolor}{RGB}{0,128,8}
 \definecolor{lnkcolor}{RGB}{0,12,160}
-
 \usepackage{fontspec}
 \setmainfont{STIX Two Text}
 \setsansfont{Inter}[Scale=MatchLowercase]
@@ -33,31 +31,24 @@
 \DeclareRobustCommand\zhemph{\CJKunderdot}
 \usepackage{unicode-math}
 \setmathfont{STIX Two Math}
-
 \usepackage{hyperref}
 \hypersetup{pdffitwindow,
-  pdftitle   = {fixdif 宏包（中文文档）},
+  pdftitle   = {fixdif 宏包},
   pdfauthor  = {AlphaZTX},
-  pdfcreator = {pdfLaTeX/XeLaTeX/LuaLaTeX},
+  pdfcreator = {XeTeX},
   linkcolor  = black,
-  urlcolor   = lnkcolor,
-}
-
-\usepackage{doc}
+  urlcolor   = lnkcolor}
+\usepackage{doc}% Warning
 \DeclareRobustCommand\marg[1]{\texttt{\{}\meta{#1}\texttt{\}}}
-
 \usepackage{fancyvrb}
 \fvset{xleftmargin=2em,fontsize=\small}
 \MakeShortVerb|
-
 \usepackage{hologo}
 \DeclareRobustCommand\pdflatex{\hologo{pdfLaTeX}}
 \DeclareRobustCommand\xelatex{\hologo{XeLaTeX}}
 \DeclareRobustCommand\lualatex{\hologo{LuaLaTeX}}
-
 \DeclareRobustCommand\pkg{\textsf}
 \DeclareRobustCommand\opt{\texttt}
-
 \makeatletter
 \renewcommand\section{\@startsection{section}{1}{\z@}%
   {-2.5ex plus -1ex minus -.2ex}%
@@ -73,23 +64,18 @@
   {\indent\normalfont\normalsize\bfseries\color{titlecolor}}}
 \gdef\fd@name{\char"66\char"69\char"78\char"64\char"69\char"66}
 \def\ps@plain{\let\@mkboth\@gobbletwo
-  \def\@oddhead{\hbox{}\llap{\raisebox{-24.44cm}[0pt][0pt]{\sffamily\bfseries%
-    \color{titlecolor!5}\fontsize{238pt}{0pt}\selectfont\fd@name}%
-    \hspace*{-14.72cm}}\hfil\hbox{}\rlap{\raisebox{.2cm}[0pt][0pt]{%
+  \def\@oddhead{\hfil\hbox{}\rlap{\raisebox{.2cm}[0pt][0pt]{%
     \hspace*{1.4cm}\sffamily\bfseries\color{titlecolor!35}%
     \fontsize{128pt}{0pt}\selectfont\thepage}}}%
   \def\@oddfoot{\reset@font}\let\@evenhead\@oddhead\let\@evenfoot\@oddfoot}
-\gdef\@title{\bfseries\pkg{\fd@name}\Uchar"5B8F\Uchar"5305}
+\gdef\@title{\bfseries\pkg{\char"66\char"69\char"78\char"64\char"69\char"66}%
+  \Uchar"5B8F\Uchar"5305}
 \gdef\@author{\Uchar"5F20\Uchar"5EAD\Uchar"7444}
 \makeatother
 \pagestyle{plain}
-
-\usepackage{fixdif}
-
 \linespread{1.2}
 \parskip8pt plus 4pt minus 2pt
 \parindent2em
-
 \begin{document}
 \maketitle
 \thispagestyle{plain}
@@ -102,14 +88,18 @@
 本宏包在 \xelatex{} 和 \lualatex{} 下兼容 \pkg{unicode-math} 宏包。
 \end{abstract}
 
-{\parskip0pt\tableofcontents}
+\section*{\contentsname}
+\begin{multicols}{2}
+\parskip0pt
+\csname @starttoc\endcsname{toc}
+\end{multicols}
 
 \section{背景}
 我们一般更推荐在微分算符与前面的内容之间留出一个比较小的间距\footnote{%
 见 \hyperref{https://tex.stackexchange.com/questions/14821/whats-the-%
 proper-way-to-typeset-a-differential-operator}{}{}{\TeX.SX}。}，比如在下面展示的
 两种情况中，右边的比左边的更好：
-\[f(x)\mathrm{d}x\qquad\text{\&}\qquad f(x)\d x.\]
+\[f(x)\mathrm{d}x \qquad\hbox{\&}\qquad f(x)\d x.\]
 微分算符 $\d{}$ 与其前面的表达式之间的间距可认为是乘积的一种表示。
 
 有些用户习惯使用下面的方法定义一个宏：
@@ -206,41 +196,16 @@ texhash
 会得到
 \[f(x)\d x,\quad \frac{\d y}{\d x},\quad \d y/\d x,\quad a^{y\d x}.\]
 
-\subsection{对 \pkg{unicode-math} 宏包的兼容}
-如果你在文档中使用了 \pkg{unicode-math} 宏包（编译方式为 \xelatex{} 或 
-\lualatex{}），需注意以下几点：
-\begin{itemize}
-\item 如需使用 \pkg{amsmath} 宏包，请在 \pkg{unicode-math} \zhemph{之前}%
-载入 \pkg{amsmath}。
-
-\item 在载入 \pkg{unicode-math} 后通过 \cs{setmathfont} 指定数学字体。
-若使用默认的数学字体，建议显式指明 |\setmathfont{Latin Modern Math}|，
-这样可以避免在用斜杠表示的分式中产生不好的间距；
-
-\item \pkg{fixdif} 宏包需要在 \pkg{unicode-math} 宏包\zhemph{后}载入。
-\end{itemize}
-从而，导言区正确的顺序是：
-\begin{Verbatim}
-\usepackage[..]{amsmath}
-\usepackage[..]{unicode-math}
-\setmathfont{...}[...]
-\usepackage{fixdif}
-\end{Verbatim}
-
-\subsection{对 \pkg{hyperref} 宏包的兼容}
-如果你使用了 \pkg{hyperref} 宏包，需注意 \pkg{fixdif} 宏包需要在 \pkg{hyperref} 
-之后载入，否则会引起冲突。
-
-\subsection{基本命令及宏包选项}
-\DescribeMacro{\d}
-\pkg{fixdif} 宏包提供了 \cs{d} 命令用于在数学模式中得到微分算符“$\d{}$”。
+\subsection{基本的 \cs{d} 命令}
+\DescribeMacro{\d}%
+\pkg{fixdif} 宏包提供了 \cs{d} 命令用于在数学模式中得到微分算符“$\d$”。
 在正文中，\cs{d} 会保留其原有的重音符号的功能。例如：
 \begin{Verbatim}
 $\d x$ 和 \d x
 \end{Verbatim}
 以上代码会得到“$\d x$ 和 \d x”。
 
-\paragraph{设置 \cs{d} 的字体}
+\subsection{设置 \cs{d} 的字体}
 本宏包提供了两个选项来控制 \cs{d} 的字体，分别为 \opt{rm} 和 \opt{normal}。
 其中，\opt{rm} 为默认值，表示 \cs{d} 的字体为罗马体（\cs{mathrm}）；
 \opt{normal} 表示 \cs{d} 的字体为数学模式下的常规体（\cs{mathnormal}），
@@ -258,8 +223,8 @@ $\d x$ 和 \d x
 \end{Verbatim}
 在此设置下，正文中的 |\d x| 会得到 $\mathsf{d}x$。
 
-\paragraph{\cs{partial} 的行为}
-\DescribeMacro{\partial}
+\subsection{\cs{partial} 的行为}
+\DescribeMacro{\partial}%
 \pkg{fixdif} 宏包将 \cs{partial} 归为微分算符，正文中的 \cs{partial} 前面也会有
 自动的间距。例如 |$\partial x\partial y$| 会得到 $\partial x\partial y$。
 若不需要将 \cs{partial} 视为微分算符，可以开启 \opt{nopartial} 选项：
@@ -325,7 +290,7 @@ $\d x$ 和 \d x
 \noindent\textcolor{titlecolor}{\cs{newdif}\marg{cmd}\marg{multi-cmd}}%
 \DescribeMacro{\newdif}\hfill（仅限在导言区使用，后无矫正）\\
 \noindent\textcolor{titlecolor}{\cs{newdif*}\marg{cmd}\marg{multi-cmd}}%
-\DescribeMacro{\newdif*}\hfill（仅限在导言区使用，后有矫正）
+\hfill（仅限在导言区使用，后有矫正）
 
 上面两个命令的第一个参数 \meta{cmd} 是新定义的微分算符命令，第二个参数 
 \meta{multi-cmd} 是超过一个字（token）的命令组合或字符串。举个例子，在 
@@ -346,9 +311,9 @@ $\d x$ 和 \d x
 \cs{newdif}(\texttt{*}) 会检查第一个参数 \meta{cmd} 是否已经被定义，若 \meta{cmd} 
 已被定义，则会报错。
 
-\noindent\textcolor{titlecolor}{\cs{renewdif}\marg{cmd}\marg{multi-cmd}}\DescribeMacro{\renewdif}
-\hfill（仅限在导言区使用，后无矫正）\\
-\noindent\textcolor{titlecolor}{\cs{renewdif*}\marg{cmd}\marg{multi-cmd}}\DescribeMacro{\renewdif*}
+\noindent\textcolor{titlecolor}{\cs{renewdif}\marg{cmd}\marg{multi-cmd}}%
+\DescribeMacro{\renewdif}\hfill（仅限在导言区使用，后无矫正）\\
+\noindent\textcolor{titlecolor}{\cs{renewdif*}\marg{cmd}\marg{multi-cmd}}%
 \hfill（仅限在导言区使用，后有矫正）
 
 这两个命令用于将 \meta{cmd} 重定义为微分算符命令。
@@ -358,7 +323,7 @@ $\d x$ 和 \d x
 \noindent\textcolor{titlecolor}{\cs{mathdif}\marg{symbol}}%
 \DescribeMacro{\mathdif}\hfill（仅限在数学模式使用，后无矫正）\\ 
 \noindent\textcolor{titlecolor}{\cs{mathdif*}\marg{symbol}}%
-\DescribeMacro{\mathdif*}\hfill（仅限在数学模式使用，后有矫正）
+\hfill（仅限在数学模式使用，后有矫正）
 
 如需在正文中少量使用某一数学符号作为微分算符，可以使用上面的两个命令。
 例如，\verb|$x\mathdif{\Delta}\psi$| 会得到 $x\mathdif{\Delta}\psi$。
@@ -382,14 +347,6 @@ $\d x$ 和 \d x
 \begin{Verbatim}
 \letdif{\laplacian}{Delta}
 \end{Verbatim}
-如果你比较擅长使用 \pkg{xparse} 宏包的接口，你也可以采用下面的方法：
-\begin{Verbatim}
-\letdif{\nabla}{nabla}
-\DeclareDocumentCommand{ \laplacian }{ s }{
-  \IfBooleanTF { #1 } { \mathdif{\Delta} } { \nabla^2 }
-}
-\end{Verbatim}
-这样，|\laplacian| 会得到 $\nabla^2$，|\laplacian*| 会得到 $\Delta$。
 
 \paragraph{处理正负号与微分算符之间的间距}
 输入 |$-\d x$| 会得到 $-\d x$。如果你不希望在正负号与微分算符之间保留
