@@ -131,7 +131,7 @@ Copyright (C) 2022-2023 by Zhang Tingxuan <alphaztx@163.com>.
 %</internal>
 %
 %<*driver>
-\ProvidesFile{fixdif.dtx}[2023/02/01 (c) Copyright 2022-2023 by Zhang Tingxuan]
+\ProvidesFile{fixdif.dtx}[2023/02/21 (c) Copyright 2022-2023 by Zhang Tingxuan]
 \documentclass{ltxdoc}
 
 \usepackage{xcolor}
@@ -150,7 +150,7 @@ Copyright (C) 2022-2023 by Zhang Tingxuan <alphaztx@163.com>.
 
 \title{The \pkg{fixdif} Package}
 \author{Zhang Tingxuan}
-\date{2023/02/01\quad Version 2.0a\thanks{\url{https://github.com/AlphaZTX/fixdif}}}
+\date{2023/02/21\quad Version 2.0b\thanks{\url{https://github.com/AlphaZTX/fixdif}}}
 
 \usepackage{hyperref}
 \hypersetup{
@@ -206,49 +206,45 @@ Copyright (C) 2022-2023 by Zhang Tingxuan <alphaztx@163.com>.
 % \maketitle
 % 
 % \begin{abstract}
-% The \pkg{fixdif} package redefines the \cs{d} command in \LaTeX{} 
-% and provides an interface to define commands for differential operators.
+% The \pkg{fixdif} package redefines the \cs{d} command in \LaTeX\ and 
+% provides an interface to define commands for differential operators.
 %
-% The package is compatible with pdf\TeX, \XeTeX{} and \LuaTeX. 
-% Furthermore, the package is compatible with \pkg{unicode-math} package 
-% in \XeTeX{} and \LuaTeX.
+% The package does well with pdf\TeX, \XeTeX\ and \LuaTeX, only works 
+% with \LaTeX\ format. Furthermore, this package is compatible with 
+% \pkg{unicode-math} package in \XeTeX\ and \LuaTeX.
 % \end{abstract}
 %
 % {\parskip1pt plus 1pt\tableofcontents}
 %
 % \section{The background}
-% It's usually recommended that one should reserve a small skip between 
+% It's usually recommended that a small skip should be reserved between 
 % the differential operator and the expression before it\footnote{See 
 % \url{https://tex.stackexchange.com/questions/14821/whats-the-proper-way-to-typeset-a-differential-operator}.}. 
-% Take the following cases as an example:
-% \[f(x)\mathrm{d}x\qquad\mbox{and}\qquad f(x)\d x.\]
+% Take the following line as an example:
+% \[f(x)\mathrm{d}x\qquad\hbox{and}\qquad f(x)\d x.\]
 % We usually consider that the example on the right side is better than the 
-% one on the left side. The little skip between $f(x)$ and $\d x$ can be 
-% regarded as a symbol of the product of $f(x)$ and $\d x$. 
+% one on left side. The small skip between $f(x)$ and $\d x$ can be 
+% regarded as a binary operator.
 %
-% So some users prefer to define a macro like this:
+% Some users prefer to define a macro like this:
 % \begin{Verbatim}
 % \renewcommand\d{\mathop{\mathrm{d}}\!}
 % \end{Verbatim}
-% This macro works well in ``display math'' and ``text math'', but we still 
-% face the following three problems:
+% This macro works well in display math and text math, but still appears with 
+% the following three problems:
 % \begin{enumerate}
-% \item The skip before ``d'' would still be reserved in ``text fraction'', 
-% which is regarded bad. For example, |$\d y/\d x$| produces 
-% $\mathrm{d}y/\,\mathrm{d}x$;
+% \item The skip before ``$\d$'' still exists before the denominator in 
+% ``text fraction''. This is what we do not hope to see. For example, 
+% |$\d y/\d x$| produces $\mathrm{d}y/\,\mathrm{d}x$.
 %
-% \item This |\d| command cannot be used out of math mode. In other words, 
-% |\d{o}| would not produce ``\d{o}'' in text;
+% \item |\d| is defined as a text accent command in \LaTeXe\ kernel. If we 
+% defined like this, |\d{o}| could not produce ``\d{o}'' in text.
 %
-% \item The skip between ``d'' and the expression before it can be regarded 
-% as a product operator. A product operator is definitely a binary operator. 
-%
-% Take |\cdot| ($\cdot$) as an example.
-% A binary operator reserves small skips before and after itself when in 
-% ``display math'' or ``text math'' such as $x\cdot y$, but the skips will 
-% disappear in ``script math'' or ``script script math'' such as $a^{x\cdot y}$. 
-% Thus the small skip should also disappear in script, but |$a^{f(x)\d x}$| 
-% still produces $a^{f(x)\,\mathrm{d}x}$ but not $a^{f(x)\d x}$.
+% \item The skip before ``d'' should behave like skips around a binary operator. 
+% It should disappear in script math and script script math. For example, 
+% |$a+b$| yields $a+b$ while |$^{a+b}$| yields $^{a+b}$, the skips around ``$+$'' 
+% disappear in superscript. But in the definition above, |$^{f(x)\d x}$| 
+% yields $^{f(x)\,\mathrm{d}x}$ but not $^{f(x)\d x}$.
 % \end{enumerate}
 % To solve these problems, you can try this package.
 %
@@ -257,8 +253,8 @@ Copyright (C) 2022-2023 by Zhang Tingxuan <alphaztx@163.com>.
 % \begin{Verbatim}
 % \usepackage{fixdif}
 % \end{Verbatim}
-% in the preamble (\pkg{fixdif} allows you to write this line anywhere in the
-% preamble since version 2.0). In your document, 
+% in the preamble. \pkg{fixdif} allows you to write this line anywhere in the
+% preamble since version 2.0. In your document, 
 % \begin{Verbatim}
 % \[ f(x)\d x,\quad\frac{\d y}{\d x},\quad\d y/\d x,\quad a^{y\d x}. \]
 % \end{Verbatim}
@@ -269,41 +265,42 @@ Copyright (C) 2022-2023 by Zhang Tingxuan <alphaztx@163.com>.
 % \DescribeMacro{\d}
 % The \pkg{fixdif} package provides a \cs{d} command for the differential 
 % operator ``d'' in math mode. When in text, \cs{d} behaves just like 
-% the old \cs{d} command in \LaTeX{} or plain \TeX{} as an 
-% accent command. For example, 
+% the old \cs{d} command in \LaTeX\ or plain \TeX\ as an accent command.
+% For example, 
 % \begin{Verbatim}
 % $\d x$ and \d x
 % \end{Verbatim}
-% will produce ``$\d x$ and \d x''.
+% tields ``$\d x$ and \d x''.
 %
 % \paragraph{Set the font of \cs{d}}
-% There are two basic package options to control the \cs{d}'s style in math 
-% mode~--- \opt{rm} and \opt{normal}. The default option is \opt{rm}, in which 
-% case |$f(x)\d x$| produces $f(x)\d x$. If you chose the \opt{normal} option, 
-% for example
+% There are two package options to control the style of \cs{d} in math mode~--- 
+% \opt{rm} and \opt{normal}. The default option is \opt{rm}, in which case 
+% |$f(x)\d x$| produces $f(x)\d x$. If you chose the \opt{normal} option, 
+% that is
 % \begin{Verbatim}
 % \usepackage[normal]{fixdif}
 % \end{Verbatim}
-% |$f(x)\d x$| would produces $f(x)\,dx$.
+% |$f(x)\d x$| yields $f(x)\,dx$.
 %
 % \DescribeMacro{\resetdfont}
-% Besides the previous two optional fonts, you can reset the font of 
-% differential operator ``d'' through \cs{resetdfont} command in preamble:
+% Regardless of the two options above, you can reset the font of \cs{d} 
+% through \cs{resetdfont} command in preamble:
 % \begin{Verbatim}
 % \resetdfont{\mathsf}
 % \end{Verbatim}
-% then |\d x| will produce $\mathsf{d}x$.
+% then |$\d x$| yields $\mathsf{d}x$. Notice that the argument of 
+% \cs{resetdfont} should be a command with \emph{one} argument.
 %
 % \paragraph{Control the behavior of \cs{partial}}
 % \DescribeMacro{\partial}
-% In default, \cs{partial} will also be regarded as a differential operator 
-% in this package. If you don't like this default setting, you can use the 
-% \opt{nopartial} option:
+% In default, \cs{partial} will be regarded as a differential operator 
+% after you load \pkg{fixdif}. If you don't like this default setting, 
+% you can use the \opt{nopartial} option:
 % \begin{Verbatim}
 % \usepackage[nopartial]{fixdif}
 % \end{Verbatim}
-% If you use the default setting, \cs{partialnondif} yields the ordinary 
-% symbol $\partialnondif$.
+% If you choose to use the default settings, \cs{partialnondif} yields 
+% the ordinary symbol ``$\partialnondif$''.
 %
 % \section{Define commands for differential operators}
 % \noindent\emph{Attention! The commands in this section 
@@ -313,7 +310,7 @@ Copyright (C) 2022-2023 by Zhang Tingxuan <alphaztx@163.com>.
 % \noindent\textcolor{titlecolor}{\cs{letdif}\marg{cmd}\marg{csname}}\DescribeMacro{\letdif}
 % \hfill(preamble only)
 %
-% The \cs{letdif} command has two arguments~--- the first is the newly-defined 
+% The \cs{letdif} command takes two arguments~--- the first is the newly-defined 
 % command and the second is the control sequence \emph{name} of a math character, 
 % that is, a command without its backslash. For example,
 % \begin{Verbatim}
@@ -447,7 +444,7 @@ Copyright (C) 2022-2023 by Zhang Tingxuan <alphaztx@163.com>.
 % Check the \TeX{} format and provides the package name.
 %    \begin{macrocode}
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{fixdif}[2023/02/01 Interface for defining differential operators.]
+\ProvidesPackage{fixdif}[2023/02/21 Interface for defining differential operators.]
 %    \end{macrocode}
 % 
 % \subsection{Control the skip between slashes and differential operator}
