@@ -131,27 +131,22 @@ Copyright (C) 2022-2023 by Zhang Tingxuan <alphaztx@163.com>.
 %</internal>
 %
 %<*driver>
-\ProvidesFile{fixdif.dtx}[2023/02/21 (c) Copyright 2022-2023 by Zhang Tingxuan]
+\ProvidesFile{fixdif.dtx}[2023/03/20 (c) Copyright 2022-2023 by Zhang Tingxuan]
 \documentclass{ltxdoc}
-
 \usepackage{xcolor}
 \definecolor{titlecolor}{RGB}{0,12,160}
 \usepackage{doc}
 \usepackage{fancyvrb}
 \fvset{xleftmargin=2.5em,fontsize=\small,gobble=2}
 \MakeShortVerb|
-
 \usepackage{hologo}
 \def\XeTeX{\hologo{XeTeX}}
 \def\LuaTeX{\hologo{LuaTeX}}
-
 \def\pkg{\textsf}
 \def\opt{\texttt}
-
 \title{The \pkg{fixdif} Package}
 \author{Zhang Tingxuan}
-\date{2023/02/21\quad Version 2.0b\thanks{\url{https://github.com/AlphaZTX/fixdif}}}
-
+\date{2023/03/20\quad Version 2.1\thanks{\url{https://github.com/AlphaZTX/fixdif}}}
 \usepackage{hyperref}
 \hypersetup{
   pdftitle   = {The fixdif Package},
@@ -161,7 +156,6 @@ Copyright (C) 2022-2023 by Zhang Tingxuan <alphaztx@163.com>.
   urlcolor   = titlecolor!80!black,
 }
 \def\pkg{\textsf}
-
 \makeatletter
 \renewcommand\section{\@startsection{section}{1}{\z@}%
   {-2.5ex plus -1ex minus -.2ex}%
@@ -190,13 +184,10 @@ Copyright (C) 2022-2023 by Zhang Tingxuan <alphaztx@163.com>.
   \usepackage{unicode-math}
 \fi
 \makeatother
-
 \usepackage{fixdif}
-
 \linespread{1.05}
 \parskip6pt plus 2pt minus 1pt
 \parindent2.5em
-
 \begin{document}
   \DocInput{\jobname.dtx}
 \end{document}
@@ -444,7 +435,7 @@ Copyright (C) 2022-2023 by Zhang Tingxuan <alphaztx@163.com>.
 % Check the \TeX{} format and provides the package name.
 %    \begin{macrocode}
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{fixdif}[2023/02/21 Interface for defining differential operators.]
+\ProvidesPackage{fixdif}[2023/03/20 Interface for defining differential operators.]
 %    \end{macrocode}
 % 
 % \subsection{Control the skip between slashes and differential operator}
@@ -460,14 +451,11 @@ Copyright (C) 2022-2023 by Zhang Tingxuan <alphaztx@163.com>.
 \ifcsname symbf\endcsname%
   \csname bool_if:cF\endcsname{g__um_main_font_defined_bool}%
     {\csname __um_load_lm:\endcsname}%
-  \Umathcode`\/="4 \symoperators "002F%
-  \Umathcode"2044="4 \symoperators "2044%
-  \Umathcode"2215="4 \symoperators "2215%
-  \Umathcode"2F98="4 \symoperators "2F98%
-  \Umathcode`\\="4 \symoperators "005C%
-  \Umathcode"2216="4 \symoperators "2216%
-  \Umathcode"29F5="4 \symoperators "29F5%
-  \Umathcode"29F9="4 \symoperators "29F9%
+  \def\fd@patchUmathcode#1{% 16777216 = 16^6
+    \@tempcnta=\numexpr(\the\Umathcodenum#1-#1)/16777216\relax
+    \Umathcode #1 = "4 \@tempcnta #1}%
+  \fd@patchUmathcode{"2F}%
+  \fd@patchUmathcode{"5C}%
 \else\ifcsname fontspec\endcsname
   \csname bool_if:cT\endcsname{g__fontspec_math_bool}%
     {%
